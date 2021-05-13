@@ -1,5 +1,6 @@
 module Pages.GetJson exposing (Model, Msg, page)
 
+import Decode.SpielDecoder exposing (..)
 import Gen.Params.GetJson exposing (Params)
 import Html
 import Http
@@ -24,6 +25,7 @@ type Model
     = Failure
     | Loading
     | Success String
+    | SuccessSpiel Spiel
 
 
 
@@ -34,10 +36,15 @@ type Model
 
 init : ( Model, Cmd Msg )
 init =
+    let
+        gotText : Result Http.Error String -> Msg
+        gotText =
+            GotText
+    in
     ( Loading
     , Http.get
         { url = "http://localhost:8080/spiele/7"
-        , expect = Http.expectString GotText
+        , expect = Http.expectJson GotJson Decode.SpielDecoder.decodeSpiel
         }
     )
 
@@ -49,6 +56,7 @@ init =
 type Msg
     = ReplaceMe
     | GotText (Result Http.Error String)
+    | GotJson (Result Http.Error Spiel)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -61,6 +69,14 @@ update msg model =
             case result of
                 Ok value ->
                     ( Success value, Cmd.none )
+
+                Err error ->
+                    ( Failure, Cmd.none )
+
+        GotJson result ->
+            case result of
+                Ok value ->
+                    ( SuccessSpiel value, Cmd.none )
 
                 Err error ->
                     ( Failure, Cmd.none )
@@ -98,5 +114,8 @@ view model =
 
                 Failure ->
                     Html.text "a failure"
+
+                SuccessSpiel spiel ->
+                    Html.text spiel.name
             ]
     }
