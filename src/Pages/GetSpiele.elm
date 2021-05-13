@@ -1,8 +1,9 @@
-module Pages.GetJson exposing (Model, Msg, page)
+module Pages.GetSpiele exposing (Model, Msg, page)
 
 import Decode.SpielDecoder exposing (..)
 import Gen.Params.GetJson exposing (Params)
-import Html
+import Html exposing (text)
+import Html.Attributes
 import Http
 import Page
 import Request
@@ -26,6 +27,7 @@ type Model
     | Loading
     | Success String
     | SuccessSpiel Spiel
+    | SuccessSpiele SpieleCollection
 
 
 
@@ -43,8 +45,8 @@ init =
     in
     ( Loading
     , Http.get
-        { url = "http://localhost:8080/spiele/7"
-        , expect = Http.expectJson GotJson Decode.SpielDecoder.decodeSpiel
+        { url = "http://localhost:8080/spiele"
+        , expect = Http.expectJson GotJsonCollection Decode.SpielDecoder.decodeSpieleCollection
         }
     )
 
@@ -57,6 +59,7 @@ type Msg
     = ReplaceMe
     | GotText (Result Http.Error String)
     | GotJson (Result Http.Error Spiel)
+    | GotJsonCollection (Result Http.Error SpieleCollection)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -77,6 +80,14 @@ update msg model =
             case result of
                 Ok value ->
                     ( SuccessSpiel value, Cmd.none )
+
+                Err error ->
+                    ( Failure, Cmd.none )
+
+        GotJsonCollection result ->
+            case result of
+                Ok value ->
+                    ( SuccessSpiele value, Cmd.none )
 
                 Err error ->
                     ( Failure, Cmd.none )
@@ -117,5 +128,37 @@ view model =
 
                 SuccessSpiel spiel ->
                     Html.text spiel.name
+
+                SuccessSpiele spieleCollection ->
+                    let
+                        spiele : List Spiel
+                        spiele =
+                            spieleCollection.embedded.spiele
+
+                        spiel2html : Spiel -> Html.Html msg
+                        spiel2html spiel =
+                            Html.div []
+                                [ Html.text spiel.name
+                                , Html.br [] []
+                                , text spiel.beschreibung
+                                , Html.br [] []
+                                , text spiel.kategorie
+                                , text " "
+                                , Html.a [ Html.Attributes.href spiel.links.spiel.href ]
+                                    [ Html.text spiel.links.spiel.href
+                                    ]
+                                ]
+
+                        spieleHtml : List (Html.Html msg)
+                        spieleHtml =
+                            List.map spiel2html spiele
+
+                        wrapInLi : Html.Html msg -> Html.Html msg
+                        wrapInLi x =
+                            Html.li [] [ x ]
+                    in
+                    Html.ul [] <|
+                        List.map wrapInLi <|
+                            spieleHtml
             ]
     }

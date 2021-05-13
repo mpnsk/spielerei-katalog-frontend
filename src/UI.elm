@@ -22,7 +22,8 @@ layout children =
             [ link Route.Home_
 
             --viewLink "Home" Route.Home_
-            , link Route.GetJson
+            , link Route.GetSpiel
+            , link Route.GetSpiele
 
             --, viewLink "Static" Route.AboutUs
             ]
