@@ -8,13 +8,24 @@ import Json.Encode
 -- generated from korban.net/elm/json2elm/
 
 
-type alias Spiel =
+type alias SpieleCollection =
+    { embedded : Embedded
+    , links : Links
+    }
+
+
+type alias Embedded =
+    { spiele : List EmbeddedSpieleObject
+    }
+
+
+type alias EmbeddedSpieleObject =
     { altersempfehlung : Int
     , beschreibung : String
     , erscheinugsjahr : String
     , kategorie : String
     , leihpreis : Int
-    , links : Links
+    , links : EmbeddedSpieleObjectLinks
     , name : String
     , spieldauerMinuten : Int
     , spieldauerTyp : String
@@ -23,9 +34,25 @@ type alias Spiel =
     }
 
 
+type alias EmbeddedSpieleObjectLinks =
+    { self : EmbeddedSpieleObjectLinksSelf
+    , spiel : EmbeddedSpieleObjectLinksSpiel
+    }
+
+
+type alias EmbeddedSpieleObjectLinksSelf =
+    { href : String
+    }
+
+
+type alias EmbeddedSpieleObjectLinksSpiel =
+    { href : String
+    }
+
+
 type alias Links =
-    { self : LinksSelf
-    , spiel : LinksSpiel
+    { profile : LinksProfile
+    , self : LinksSelf
     }
 
 
@@ -34,22 +61,45 @@ type alias LinksSelf =
     }
 
 
-type alias LinksSpiel =
+type alias LinksProfile =
     { href : String
     }
 
 
-decodeSpiel : Json.Decode.Decoder Spiel
-decodeSpiel =
+decodeSpieleCollection : Json.Decode.Decoder SpieleCollection
+decodeSpieleCollection =
+    Json.Decode.map2 SpieleCollection
+        (Json.Decode.field "_embedded" decodeEmbedded)
+        (Json.Decode.field "_links" decodeLinks)
+
+
+decodeEmbedded : Json.Decode.Decoder Embedded
+decodeEmbedded =
+    Json.Decode.map Embedded
+        (Json.Decode.field "spiele" <| Json.Decode.list decodeEmbeddedSpieleObject)
+
+
+decodeEmbeddedSpiele : Json.Decode.Decoder (List EmbeddedSpieleObject)
+decodeEmbeddedSpiele =
+    Json.Decode.list decodeEmbeddedSpieleMember
+
+
+decodeEmbeddedSpieleMember : Json.Decode.Decoder EmbeddedSpieleObject
+decodeEmbeddedSpieleMember =
+    decodeEmbeddedSpieleObject
+
+
+decodeEmbeddedSpieleObject : Json.Decode.Decoder EmbeddedSpieleObject
+decodeEmbeddedSpieleObject =
     let
         fieldSet0 =
-            Json.Decode.map8 Spiel
+            Json.Decode.map8 EmbeddedSpieleObject
                 (Json.Decode.field "altersempfehlung" Json.Decode.int)
                 (Json.Decode.field "beschreibung" Json.Decode.string)
                 (Json.Decode.field "erscheinugsjahr" Json.Decode.string)
                 (Json.Decode.field "kategorie" Json.Decode.string)
                 (Json.Decode.field "leihpreis" Json.Decode.int)
-                (Json.Decode.field "_links" decodeLinks)
+                (Json.Decode.field "_links" decodeEmbeddedSpieleObjectLinks)
                 (Json.Decode.field "name" Json.Decode.string)
                 (Json.Decode.field "spieldauerMinuten" Json.Decode.int)
     in
@@ -60,11 +110,30 @@ decodeSpiel =
         (Json.Decode.field "spieleranzahlMin" Json.Decode.int)
 
 
+decodeEmbeddedSpieleObjectLinks : Json.Decode.Decoder EmbeddedSpieleObjectLinks
+decodeEmbeddedSpieleObjectLinks =
+    Json.Decode.map2 EmbeddedSpieleObjectLinks
+        (Json.Decode.field "self" decodeEmbeddedSpieleObjectLinksSelf)
+        (Json.Decode.field "spiel" decodeEmbeddedSpieleObjectLinksSpiel)
+
+
+decodeEmbeddedSpieleObjectLinksSelf : Json.Decode.Decoder EmbeddedSpieleObjectLinksSelf
+decodeEmbeddedSpieleObjectLinksSelf =
+    Json.Decode.map EmbeddedSpieleObjectLinksSelf
+        (Json.Decode.field "href" Json.Decode.string)
+
+
+decodeEmbeddedSpieleObjectLinksSpiel : Json.Decode.Decoder EmbeddedSpieleObjectLinksSpiel
+decodeEmbeddedSpieleObjectLinksSpiel =
+    Json.Decode.map EmbeddedSpieleObjectLinksSpiel
+        (Json.Decode.field "href" Json.Decode.string)
+
+
 decodeLinks : Json.Decode.Decoder Links
 decodeLinks =
     Json.Decode.map2 Links
+        (Json.Decode.field "profile" decodeLinksProfile)
         (Json.Decode.field "self" decodeLinksSelf)
-        (Json.Decode.field "spiel" decodeLinksSpiel)
 
 
 decodeLinksSelf : Json.Decode.Decoder LinksSelf
@@ -73,34 +142,81 @@ decodeLinksSelf =
         (Json.Decode.field "href" Json.Decode.string)
 
 
-decodeLinksSpiel : Json.Decode.Decoder LinksSpiel
-decodeLinksSpiel =
-    Json.Decode.map LinksSpiel
+decodeLinksProfile : Json.Decode.Decoder LinksProfile
+decodeLinksProfile =
+    Json.Decode.map LinksProfile
         (Json.Decode.field "href" Json.Decode.string)
 
 
-encodeSpiel : Spiel -> Json.Encode.Value
-encodeSpiel spiel =
+encodeSpieleCollection : SpieleCollection -> Json.Encode.Value
+encodeSpieleCollection spieleCollection =
     Json.Encode.object
-        [ ( "_links", encodeLinks spiel.links )
-        , ( "altersempfehlung", Json.Encode.int spiel.altersempfehlung )
-        , ( "beschreibung", Json.Encode.string spiel.beschreibung )
-        , ( "erscheinugsjahr", Json.Encode.string spiel.erscheinugsjahr )
-        , ( "kategorie", Json.Encode.string spiel.kategorie )
-        , ( "leihpreis", Json.Encode.int spiel.leihpreis )
-        , ( "name", Json.Encode.string spiel.name )
-        , ( "spieldauerMinuten", Json.Encode.int spiel.spieldauerMinuten )
-        , ( "spieldauerTyp", Json.Encode.string spiel.spieldauerTyp )
-        , ( "spieleranzahlMax", Json.Encode.int spiel.spieleranzahlMax )
-        , ( "spieleranzahlMin", Json.Encode.int spiel.spieleranzahlMin )
+        [ ( "_embedded", encodeEmbedded spieleCollection.embedded )
+        , ( "_links", encodeLinks spieleCollection.links )
+        ]
+
+
+encodeEmbedded : Embedded -> Json.Encode.Value
+encodeEmbedded embedded =
+    Json.Encode.object
+        [ ( "spiele", Json.Encode.list encodeEmbeddedSpieleObject embedded.spiele )
+        ]
+
+
+encodeEmbeddedSpiele : List EmbeddedSpieleObject -> Json.Encode.Value
+encodeEmbeddedSpiele =
+    Json.Encode.list encodeEmbeddedSpieleMember
+
+
+encodeEmbeddedSpieleMember : EmbeddedSpieleObject -> Json.Encode.Value
+encodeEmbeddedSpieleMember embeddedSpiele =
+    encodeEmbeddedSpieleObject embeddedSpiele
+
+
+encodeEmbeddedSpieleObject : EmbeddedSpieleObject -> Json.Encode.Value
+encodeEmbeddedSpieleObject embeddedSpieleObject =
+    Json.Encode.object
+        [ ( "_links", encodeEmbeddedSpieleObjectLinks embeddedSpieleObject.links )
+        , ( "altersempfehlung", Json.Encode.int embeddedSpieleObject.altersempfehlung )
+        , ( "beschreibung", Json.Encode.string embeddedSpieleObject.beschreibung )
+        , ( "erscheinugsjahr", Json.Encode.string embeddedSpieleObject.erscheinugsjahr )
+        , ( "kategorie", Json.Encode.string embeddedSpieleObject.kategorie )
+        , ( "leihpreis", Json.Encode.int embeddedSpieleObject.leihpreis )
+        , ( "name", Json.Encode.string embeddedSpieleObject.name )
+        , ( "spieldauerMinuten", Json.Encode.int embeddedSpieleObject.spieldauerMinuten )
+        , ( "spieldauerTyp", Json.Encode.string embeddedSpieleObject.spieldauerTyp )
+        , ( "spieleranzahlMax", Json.Encode.int embeddedSpieleObject.spieleranzahlMax )
+        , ( "spieleranzahlMin", Json.Encode.int embeddedSpieleObject.spieleranzahlMin )
+        ]
+
+
+encodeEmbeddedSpieleObjectLinks : EmbeddedSpieleObjectLinks -> Json.Encode.Value
+encodeEmbeddedSpieleObjectLinks embeddedSpieleObjectLinks =
+    Json.Encode.object
+        [ ( "self", encodeEmbeddedSpieleObjectLinksSelf embeddedSpieleObjectLinks.self )
+        , ( "spiel", encodeEmbeddedSpieleObjectLinksSpiel embeddedSpieleObjectLinks.spiel )
+        ]
+
+
+encodeEmbeddedSpieleObjectLinksSelf : EmbeddedSpieleObjectLinksSelf -> Json.Encode.Value
+encodeEmbeddedSpieleObjectLinksSelf embeddedSpieleObjectLinksSelf =
+    Json.Encode.object
+        [ ( "href", Json.Encode.string embeddedSpieleObjectLinksSelf.href )
+        ]
+
+
+encodeEmbeddedSpieleObjectLinksSpiel : EmbeddedSpieleObjectLinksSpiel -> Json.Encode.Value
+encodeEmbeddedSpieleObjectLinksSpiel embeddedSpieleObjectLinksSpiel =
+    Json.Encode.object
+        [ ( "href", Json.Encode.string embeddedSpieleObjectLinksSpiel.href )
         ]
 
 
 encodeLinks : Links -> Json.Encode.Value
 encodeLinks links =
     Json.Encode.object
-        [ ( "self", encodeLinksSelf links.self )
-        , ( "spiel", encodeLinksSpiel links.spiel )
+        [ ( "profile", encodeLinksProfile links.profile )
+        , ( "self", encodeLinksSelf links.self )
         ]
 
 
@@ -111,8 +227,8 @@ encodeLinksSelf linksSelf =
         ]
 
 
-encodeLinksSpiel : LinksSpiel -> Json.Encode.Value
-encodeLinksSpiel linksSpiel =
+encodeLinksProfile : LinksProfile -> Json.Encode.Value
+encodeLinksProfile linksProfile =
     Json.Encode.object
-        [ ( "href", Json.Encode.string linksSpiel.href )
+        [ ( "href", Json.Encode.string linksProfile.href )
         ]
