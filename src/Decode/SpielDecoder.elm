@@ -15,11 +15,11 @@ type alias SpieleCollection =
 
 
 type alias Embedded =
-    { spiele : List EmbeddedSpieleObject
+    { spiele : List Spiel
     }
 
 
-type alias EmbeddedSpieleObject =
+type alias Spiel =
     { altersempfehlung : Int
     , beschreibung : String
     , erscheinugsjahr : String
@@ -76,24 +76,24 @@ decodeSpieleCollection =
 decodeEmbedded : Json.Decode.Decoder Embedded
 decodeEmbedded =
     Json.Decode.map Embedded
-        (Json.Decode.field "spiele" <| Json.Decode.list decodeEmbeddedSpieleObject)
+        (Json.Decode.field "spiele" <| Json.Decode.list decodeSpiel)
 
 
-decodeEmbeddedSpiele : Json.Decode.Decoder (List EmbeddedSpieleObject)
+decodeEmbeddedSpiele : Json.Decode.Decoder (List Spiel)
 decodeEmbeddedSpiele =
     Json.Decode.list decodeEmbeddedSpieleMember
 
 
-decodeEmbeddedSpieleMember : Json.Decode.Decoder EmbeddedSpieleObject
+decodeEmbeddedSpieleMember : Json.Decode.Decoder Spiel
 decodeEmbeddedSpieleMember =
-    decodeEmbeddedSpieleObject
+    decodeSpiel
 
 
-decodeEmbeddedSpieleObject : Json.Decode.Decoder EmbeddedSpieleObject
-decodeEmbeddedSpieleObject =
+decodeSpiel : Json.Decode.Decoder Spiel
+decodeSpiel =
     let
         fieldSet0 =
-            Json.Decode.map8 EmbeddedSpieleObject
+            Json.Decode.map8 Spiel
                 (Json.Decode.field "altersempfehlung" Json.Decode.int)
                 (Json.Decode.field "beschreibung" Json.Decode.string)
                 (Json.Decode.field "erscheinugsjahr" Json.Decode.string)
@@ -163,17 +163,17 @@ encodeEmbedded embedded =
         ]
 
 
-encodeEmbeddedSpiele : List EmbeddedSpieleObject -> Json.Encode.Value
+encodeEmbeddedSpiele : List Spiel -> Json.Encode.Value
 encodeEmbeddedSpiele =
     Json.Encode.list encodeEmbeddedSpieleMember
 
 
-encodeEmbeddedSpieleMember : EmbeddedSpieleObject -> Json.Encode.Value
+encodeEmbeddedSpieleMember : Spiel -> Json.Encode.Value
 encodeEmbeddedSpieleMember embeddedSpiele =
     encodeEmbeddedSpieleObject embeddedSpiele
 
 
-encodeEmbeddedSpieleObject : EmbeddedSpieleObject -> Json.Encode.Value
+encodeEmbeddedSpieleObject : Spiel -> Json.Encode.Value
 encodeEmbeddedSpieleObject embeddedSpieleObject =
     Json.Encode.object
         [ ( "_links", encodeEmbeddedSpieleObjectLinks embeddedSpieleObject.links )

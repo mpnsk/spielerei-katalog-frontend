@@ -25,7 +25,7 @@ type Model
     = Failure
     | Loading
     | Success String
-    | SuccessSpiel EmbeddedSpieleObject
+    | SuccessSpiel Spiel
 
 
 
@@ -44,7 +44,7 @@ init =
     ( Loading
     , Http.get
         { url = "http://localhost:8080/spiele/7"
-        , expect = Http.expectJson GotJson Decode.SpielDecoder.decodeEmbeddedSpieleObject
+        , expect = Http.expectJson GotJson Decode.SpielDecoder.decodeSpiel
         }
     )
 
@@ -56,7 +56,7 @@ init =
 type Msg
     = ReplaceMe
     | GotText (Result Http.Error String)
-    | GotJson (Result Http.Error EmbeddedSpieleObject)
+    | GotJson (Result Http.Error Spiel)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
