@@ -28,10 +28,15 @@ type alias Spiel =
     , links : EmbeddedSpieleObjectLinks
     , name : String
     , spieldauerMinuten : Int
-    , spieldauerTyp : String
+    , spieldauerTyp : SpieldauerTyp
     , spieleranzahlMax : Int
     , spieleranzahlMin : Int
     }
+
+
+type SpieldauerTyp
+    = Standard
+    | ProSpieler
 
 
 type alias EmbeddedSpieleObjectLinks =
@@ -105,9 +110,26 @@ decodeSpiel =
     in
     Json.Decode.map4 (<|)
         fieldSet0
-        (Json.Decode.field "spieldauerTyp" Json.Decode.string)
+        spieldauerTypDecoder
         (Json.Decode.field "spieleranzahlMax" Json.Decode.int)
         (Json.Decode.field "spieleranzahlMin" Json.Decode.int)
+
+
+spieldauerTypDecoder : Json.Decode.Decoder SpieldauerTyp
+spieldauerTypDecoder =
+    Json.Decode.field "spieldauerTyp" Json.Decode.string
+        |> Json.Decode.andThen
+            (\str ->
+                case str of
+                    "Standard" ->
+                        Json.Decode.succeed Standard
+
+                    "ProSpieler" ->
+                        Json.Decode.succeed ProSpieler
+
+                    _ ->
+                        Json.Decode.fail ("Trying to decode, but spieldauerTyp " ++ str ++ " is not supported.")
+            )
 
 
 decodeEmbeddedSpieleObjectLinks : Json.Decode.Decoder EmbeddedSpieleObjectLinks
@@ -184,7 +206,15 @@ encodeEmbeddedSpieleObject embeddedSpieleObject =
         , ( "leihpreis", Json.Encode.int embeddedSpieleObject.leihpreis )
         , ( "name", Json.Encode.string embeddedSpieleObject.name )
         , ( "spieldauerMinuten", Json.Encode.int embeddedSpieleObject.spieldauerMinuten )
-        , ( "spieldauerTyp", Json.Encode.string embeddedSpieleObject.spieldauerTyp )
+        , ( "spieldauerTyp"
+          , Json.Encode.string <|
+                case embeddedSpieleObject.spieldauerTyp of
+                    Standard ->
+                        "Standard"
+
+                    ProSpieler ->
+                        "ProSieler"
+          )
         , ( "spieleranzahlMax", Json.Encode.int embeddedSpieleObject.spieleranzahlMax )
         , ( "spieleranzahlMin", Json.Encode.int embeddedSpieleObject.spieleranzahlMin )
         ]

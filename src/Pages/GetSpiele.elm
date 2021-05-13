@@ -146,6 +146,14 @@ view model =
                             , Html.a [ Html.Attributes.href spiel.links.spiel.href ]
                                 [ Html.text spiel.links.spiel.href
                                 ]
+                            , Html.br [] []
+                            , text <|
+                                case spiel.spieldauerTyp of
+                                    Standard ->
+                                        "Standard"
+
+                                    ProSpieler ->
+                                        "pro Spieler"
                             ]
                     in
                     Html.ul []
