@@ -2,6 +2,7 @@ module Pages.GetJson exposing (Model, Msg, page)
 
 import Gen.Params.GetJson exposing (Params)
 import Html
+import Http
 import Page
 import Request
 import Shared
@@ -19,17 +20,26 @@ page shared req =
         }
 
 
+type Model
+    = Failure
+    | Loading
+    | Success String
+
+
 
 -- INIT
-
-
-type alias Model =
-    {}
+--type alias Model =
+--    {}
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( Loading
+    , Http.get
+        { url = "http://localhost:8080/spiele/7"
+        , expect = Http.expectString GotText
+        }
+    )
 
 
 
@@ -38,6 +48,7 @@ init =
 
 type Msg
     = ReplaceMe
+    | GotText (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -45,6 +56,14 @@ update msg model =
     case msg of
         ReplaceMe ->
             ( model, Cmd.none )
+
+        GotText result ->
+            case result of
+                Ok value ->
+                    ( Success value, Cmd.none )
+
+                Err error ->
+                    ( Failure, Cmd.none )
 
 
 
@@ -69,5 +88,15 @@ view model =
             [ Html.text "html text!"
             , Html.br [] []
             , Html.text "another text!"
+            , Html.br [] []
+            , case model of
+                Loading ->
+                    Html.text "loading..."
+
+                Success value ->
+                    Html.text <| "Success: " ++ value
+
+                Failure ->
+                    Html.text "a failure"
             ]
     }
