@@ -135,30 +135,23 @@ view model =
                         spiele =
                             spieleCollection.embedded.spiele
 
-                        spiel2html : Spiel -> Html.Html msg
+                        spiel2html : Spiel -> List (Html.Html msg)
                         spiel2html spiel =
-                            Html.div []
-                                [ Html.text spiel.name
-                                , Html.br [] []
-                                , text spiel.beschreibung
-                                , Html.br [] []
-                                , text spiel.kategorie
-                                , text " "
-                                , Html.a [ Html.Attributes.href spiel.links.spiel.href ]
-                                    [ Html.text spiel.links.spiel.href
-                                    ]
+                            [ Html.text spiel.name
+                            , Html.br [] []
+                            , text spiel.beschreibung
+                            , Html.br [] []
+                            , text spiel.kategorie
+                            , text " "
+                            , Html.a [ Html.Attributes.href spiel.links.spiel.href ]
+                                [ Html.text spiel.links.spiel.href
                                 ]
-
-                        spieleHtml : List (Html.Html msg)
-                        spieleHtml =
-                            List.map spiel2html spiele
-
-                        wrapInLi : Html.Html msg -> Html.Html msg
-                        wrapInLi x =
-                            Html.li [] [ x ]
+                            ]
                     in
-                    Html.ul [] <|
-                        List.map wrapInLi <|
-                            spieleHtml
+                    Html.ul []
+                        (spiele
+                            |> List.map spiel2html
+                            |> List.map (\input -> Html.li [] input)
+                        )
             ]
     }
