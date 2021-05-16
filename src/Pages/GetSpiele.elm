@@ -26,7 +26,7 @@ type Model
     = Failure
     | Loading
     | Success String
-    | SuccessSpiel Spiel
+    | SuccessSpiel EmbeddedSpieleObject
     | SuccessSpiele SpieleCollection
 
 
@@ -58,7 +58,7 @@ init =
 type Msg
     = ReplaceMe
     | GotText (Result Http.Error String)
-    | GotJson (Result Http.Error Spiel)
+    | GotJson (Result Http.Error EmbeddedSpieleObject)
     | GotJsonCollection (Result Http.Error SpieleCollection)
 
 
@@ -74,6 +74,10 @@ update msg model =
                     ( Success value, Cmd.none )
 
                 Err error ->
+                    let
+                        log =
+                            Debug.log "json error? " error
+                    in
                     ( Failure, Cmd.none )
 
         GotJson result ->
@@ -90,6 +94,10 @@ update msg model =
                     ( SuccessSpiele value, Cmd.none )
 
                 Err error ->
+                    let
+                        log =
+                            Debug.log "json error? " error
+                    in
                     ( Failure, Cmd.none )
 
 
@@ -131,11 +139,11 @@ view model =
 
                 SuccessSpiele spieleCollection ->
                     let
-                        spiele : List Spiel
+                        spiele : List EmbeddedSpieleObject
                         spiele =
                             spieleCollection.embedded.spiele
 
-                        spiel2html : Spiel -> List (Html.Html msg)
+                        spiel2html : EmbeddedSpieleObject -> List (Html.Html msg)
                         spiel2html spiel =
                             [ Html.text spiel.name
                             , Html.br [] []
@@ -149,11 +157,17 @@ view model =
                             , Html.br [] []
                             , text <|
                                 case spiel.spieldauerTyp of
-                                    Standard ->
+                                    Einwert ->
                                         "Standard"
 
                                     ProSpieler ->
                                         "pro Spieler"
+
+                                    MinMax ->
+                                        "von bis"
+
+                                    Beliebig ->
+                                        "beliebig"
                             ]
                     in
                     Html.ul []

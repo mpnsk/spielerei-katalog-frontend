@@ -5,7 +5,7 @@ import Json.Encode
 
 
 
--- generated from korban.net/elm/json2elm/
+-- generated from http://korban.net/elm/json2elm/
 
 
 type alias SpieleCollection =
@@ -15,19 +15,21 @@ type alias SpieleCollection =
 
 
 type alias Embedded =
-    { spiele : List Spiel
+    { spiele : List EmbeddedSpieleObject
     }
 
 
-type alias Spiel =
+type alias EmbeddedSpieleObject =
     { altersempfehlung : Int
+    , altersempfehlungMax : Int
     , beschreibung : String
-    , erscheinugsjahr : String
+    , erscheinugsjahr : Maybe String
     , kategorie : String
     , leihpreis : Int
     , links : EmbeddedSpieleObjectLinks
     , name : String
-    , spieldauerMinuten : Int
+    , spieldauerMinutenMax : Int
+    , spieldauerMinutenMin : Int
     , spieldauerTyp : SpieldauerTyp
     , spieleranzahlMax : Int
     , spieleranzahlMin : Int
@@ -35,8 +37,10 @@ type alias Spiel =
 
 
 type SpieldauerTyp
-    = Standard
+    = Einwert
     | ProSpieler
+    | MinMax
+    | Beliebig
 
 
 type alias EmbeddedSpieleObjectLinks =
@@ -81,38 +85,55 @@ decodeSpieleCollection =
 decodeEmbedded : Json.Decode.Decoder Embedded
 decodeEmbedded =
     Json.Decode.map Embedded
-        (Json.Decode.field "spiele" <| Json.Decode.list decodeSpiel)
+        (Json.Decode.field "spiele" <| Json.Decode.list decodeEmbeddedSpieleObject)
 
 
-decodeEmbeddedSpiele : Json.Decode.Decoder (List Spiel)
+decodeEmbeddedSpiele : Json.Decode.Decoder (List EmbeddedSpieleObject)
 decodeEmbeddedSpiele =
     Json.Decode.list decodeEmbeddedSpieleMember
 
 
-decodeEmbeddedSpieleMember : Json.Decode.Decoder Spiel
+decodeEmbeddedSpieleMember : Json.Decode.Decoder EmbeddedSpieleObject
 decodeEmbeddedSpieleMember =
-    decodeSpiel
+    decodeEmbeddedSpieleObject
 
 
-decodeSpiel : Json.Decode.Decoder Spiel
-decodeSpiel =
+decodeEmbeddedSpieleObject : Json.Decode.Decoder EmbeddedSpieleObject
+decodeEmbeddedSpieleObject =
     let
         fieldSet0 =
-            Json.Decode.map8 Spiel
+            Json.Decode.map8 EmbeddedSpieleObject
                 (Json.Decode.field "altersempfehlung" Json.Decode.int)
+                (Json.Decode.field "altersempfehlungMax" Json.Decode.int)
                 (Json.Decode.field "beschreibung" Json.Decode.string)
-                (Json.Decode.field "erscheinugsjahr" Json.Decode.string)
-                (Json.Decode.field "kategorie" Json.Decode.string)
+                (Json.Decode.maybe (Json.Decode.field "erscheinugsjahr" Json.Decode.string))
+                --    |> Json.Decode.andThen
+                --        (decodeMaybeWithDefault "")
+                --)
+                (Json.Decode.field "kategorie" <| Json.Decode.field "name" Json.Decode.string)
                 (Json.Decode.field "leihpreis" Json.Decode.int)
                 (Json.Decode.field "_links" decodeEmbeddedSpieleObjectLinks)
                 (Json.Decode.field "name" Json.Decode.string)
-                (Json.Decode.field "spieldauerMinuten" Json.Decode.int)
+
+        --(Json.Decode.field "spieldauerMinuten" Json.Decode.int)
     in
-    Json.Decode.map4 (<|)
+    Json.Decode.map6 (<|)
         fieldSet0
+        (Json.Decode.field "spieldauerMinutenMax" Json.Decode.int)
+        (Json.Decode.field "spieldauerMinutenMin" Json.Decode.int)
         spieldauerTypDecoder
         (Json.Decode.field "spieleranzahlMax" Json.Decode.int)
         (Json.Decode.field "spieleranzahlMin" Json.Decode.int)
+
+
+decodeMaybeWithDefault : a -> Maybe a -> Json.Decode.Decoder a
+decodeMaybeWithDefault default maybe =
+    case maybe of
+        Just x ->
+            Json.Decode.succeed x
+
+        Nothing ->
+            Json.Decode.succeed default
 
 
 spieldauerTypDecoder : Json.Decode.Decoder SpieldauerTyp
@@ -121,11 +142,17 @@ spieldauerTypDecoder =
         |> Json.Decode.andThen
             (\str ->
                 case str of
-                    "Standard" ->
-                        Json.Decode.succeed Standard
+                    "Einwert" ->
+                        Json.Decode.succeed Einwert
 
                     "ProSpieler" ->
                         Json.Decode.succeed ProSpieler
+
+                    "MinMax" ->
+                        Json.Decode.succeed MinMax
+
+                    "Beliebig" ->
+                        Json.Decode.succeed Beliebig
 
                     _ ->
                         Json.Decode.fail ("Trying to decode, but spieldauerTyp " ++ str ++ " is not supported.")
@@ -185,35 +212,43 @@ encodeEmbedded embedded =
         ]
 
 
-encodeEmbeddedSpiele : List Spiel -> Json.Encode.Value
+encodeEmbeddedSpiele : List EmbeddedSpieleObject -> Json.Encode.Value
 encodeEmbeddedSpiele =
     Json.Encode.list encodeEmbeddedSpieleMember
 
 
-encodeEmbeddedSpieleMember : Spiel -> Json.Encode.Value
+encodeEmbeddedSpieleMember : EmbeddedSpieleObject -> Json.Encode.Value
 encodeEmbeddedSpieleMember embeddedSpiele =
     encodeEmbeddedSpieleObject embeddedSpiele
 
 
-encodeEmbeddedSpieleObject : Spiel -> Json.Encode.Value
+encodeEmbeddedSpieleObject : EmbeddedSpieleObject -> Json.Encode.Value
 encodeEmbeddedSpieleObject embeddedSpieleObject =
     Json.Encode.object
         [ ( "_links", encodeEmbeddedSpieleObjectLinks embeddedSpieleObject.links )
         , ( "altersempfehlung", Json.Encode.int embeddedSpieleObject.altersempfehlung )
+        , ( "altersempfehlungMax", Json.Encode.int embeddedSpieleObject.altersempfehlungMax )
         , ( "beschreibung", Json.Encode.string embeddedSpieleObject.beschreibung )
-        , ( "erscheinugsjahr", Json.Encode.string embeddedSpieleObject.erscheinugsjahr )
+        , ( "erscheinugsjahr", Json.Encode.string (Maybe.withDefault "" embeddedSpieleObject.erscheinugsjahr) )
         , ( "kategorie", Json.Encode.string embeddedSpieleObject.kategorie )
         , ( "leihpreis", Json.Encode.int embeddedSpieleObject.leihpreis )
         , ( "name", Json.Encode.string embeddedSpieleObject.name )
-        , ( "spieldauerMinuten", Json.Encode.int embeddedSpieleObject.spieldauerMinuten )
+        , ( "spieldauerMinutenMax", Json.Encode.int embeddedSpieleObject.spieldauerMinutenMax )
+        , ( "spieldauerMinutenMin", Json.Encode.int embeddedSpieleObject.spieldauerMinutenMin )
         , ( "spieldauerTyp"
           , Json.Encode.string <|
                 case embeddedSpieleObject.spieldauerTyp of
-                    Standard ->
+                    Einwert ->
                         "Standard"
 
                     ProSpieler ->
                         "ProSieler"
+
+                    MinMax ->
+                        "MinMax"
+
+                    Beliebig ->
+                        "Beliebig"
           )
         , ( "spieleranzahlMax", Json.Encode.int embeddedSpieleObject.spieleranzahlMax )
         , ( "spieleranzahlMin", Json.Encode.int embeddedSpieleObject.spieleranzahlMin )
