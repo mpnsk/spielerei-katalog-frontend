@@ -8,6 +8,7 @@ import Http
 import Page
 import Request
 import Shared
+import Table exposing (Column)
 import UI
 import View exposing (View)
 
@@ -22,7 +23,13 @@ page shared req =
         }
 
 
-type Model
+type alias Model =
+    { getSpiele : ConnectionState
+    , tableState : Table.State
+    }
+
+
+type ConnectionState
     = Failure
     | Loading
     | Success String
@@ -43,7 +50,9 @@ init =
         gotText =
             GotText
     in
-    ( Loading
+    ( { getSpiele = Loading
+      , tableState = Table.initialSort "name"
+      }
     , Http.get
         { url = "http://localhost:8080/spiele"
         , expect = Http.expectJson GotJsonCollection Decode.SpielDecoder.decodeSpieleCollection
@@ -60,6 +69,7 @@ type Msg
     | GotText (Result Http.Error String)
     | GotJson (Result Http.Error EmbeddedSpieleObject)
     | GotJsonCollection (Result Http.Error SpieleCollection)
+    | SetTableState Table.State
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -71,34 +81,37 @@ update msg model =
         GotText result ->
             case result of
                 Ok value ->
-                    ( Success value, Cmd.none )
+                    ( { model | getSpiele = Success value }, Cmd.none )
 
                 Err error ->
                     let
                         log =
                             Debug.log "json error? " error
                     in
-                    ( Failure, Cmd.none )
+                    ( { model | getSpiele = Failure }, Cmd.none )
 
         GotJson result ->
             case result of
                 Ok value ->
-                    ( SuccessSpiel value, Cmd.none )
+                    ( { model | getSpiele = SuccessSpiel value }, Cmd.none )
 
                 Err error ->
-                    ( Failure, Cmd.none )
+                    ( { model | getSpiele = Failure }, Cmd.none )
 
         GotJsonCollection result ->
             case result of
                 Ok value ->
-                    ( SuccessSpiele value, Cmd.none )
+                    ( { model | getSpiele = SuccessSpiele value }, Cmd.none )
 
                 Err error ->
                     let
                         log =
                             Debug.log "json error? " error
                     in
-                    ( Failure, Cmd.none )
+                    ( { model | getSpiele = Failure }, Cmd.none )
+
+        SetTableState state ->
+            ( { model | tableState = state }, Cmd.none )
 
 
 
@@ -124,7 +137,10 @@ view model =
             , Html.br [] []
             , Html.text "another text!"
             , Html.br [] []
-            , case model of
+            , Html.br [] []
+            , Html.br [] []
+            , Html.br [] []
+            , case model.getSpiele of
                 Loading ->
                     Html.text "loading..."
 
@@ -170,10 +186,32 @@ view model =
                                         "beliebig"
                             ]
                     in
-                    Html.ul []
-                        (spiele
-                            |> List.map spiel2html
-                            |> List.map (\input -> Html.li [] input)
-                        )
+                    Table.view config model.tableState spiele
+
+            --Html.ul []
+            --    (spiele
+            --        |> List.map spiel2html
+            --        |> List.map (\input -> Html.li [] input)
+            --    )
             ]
     }
+
+
+config : Table.Config EmbeddedSpieleObject Msg
+config =
+    Table.config
+        { toId = .name
+        , toMsg = SetTableState
+        , columns =
+            [ Table.customColumn
+                { name = "Name"
+                , viewData = .name
+                , sorter = Table.increasingOrDecreasingBy (\x -> String.toUpper x.name)
+                }
+
+            --, Table.decreasingBy
+            --, Table.intColumn "Year" .year
+            --, Table.stringColumn "City" .city
+            --, Table.stringColumn "State" .state
+            ]
+        }
