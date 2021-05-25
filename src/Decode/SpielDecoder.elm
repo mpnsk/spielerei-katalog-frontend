@@ -1,7 +1,6 @@
 module Decode.SpielDecoder exposing (..)
 
 import Json.Decode
-import Json.Encode
 
 
 
@@ -30,7 +29,7 @@ type alias EmbeddedSpieleObject =
     , name : String
     , spieldauerMinutenMax : Int
     , spieldauerMinutenMin : Int
-    , spieldauerTyp : SpieldauerTyp
+    , spieldauerTyp : Maybe SpieldauerTyp
     , spieleranzahlMax : Int
     , spieleranzahlMin : Int
     }
@@ -107,7 +106,7 @@ decodeEmbeddedSpieleObject =
                 (Json.Decode.field "altersempfehlungMax" Json.Decode.int)
                 (Json.Decode.field "beschreibung" Json.Decode.string)
                 (Json.Decode.maybe (Json.Decode.field "erscheinugsjahr" Json.Decode.string))
-                --    |> Json.Decode.andThen
+                --    |> Json.OnChangeTest.andThen
                 --        (decodeMaybeWithDefault "")
                 --)
                 (Json.Decode.field "kategorie" <| Json.Decode.field "name" Json.Decode.string)
@@ -115,13 +114,13 @@ decodeEmbeddedSpieleObject =
                 (Json.Decode.field "_links" decodeEmbeddedSpieleObjectLinks)
                 (Json.Decode.field "name" Json.Decode.string)
 
-        --(Json.Decode.field "spieldauerMinuten" Json.Decode.int)
+        --(Json.OnChangeTest.field "spieldauerMinuten" Json.OnChangeTest.int)
     in
     Json.Decode.map6 (<|)
         fieldSet0
         (Json.Decode.field "spieldauerMinutenMax" Json.Decode.int)
         (Json.Decode.field "spieldauerMinutenMin" Json.Decode.int)
-        spieldauerTypDecoder
+        (Json.Decode.maybe spieldauerTypDecoder)
         (Json.Decode.field "spieleranzahlMax" Json.Decode.int)
         (Json.Decode.field "spieleranzahlMin" Json.Decode.int)
 
@@ -195,105 +194,3 @@ decodeLinksProfile : Json.Decode.Decoder LinksProfile
 decodeLinksProfile =
     Json.Decode.map LinksProfile
         (Json.Decode.field "href" Json.Decode.string)
-
-
-encodeSpieleCollection : SpieleCollection -> Json.Encode.Value
-encodeSpieleCollection spieleCollection =
-    Json.Encode.object
-        [ ( "_embedded", encodeEmbedded spieleCollection.embedded )
-        , ( "_links", encodeLinks spieleCollection.links )
-        ]
-
-
-encodeEmbedded : Embedded -> Json.Encode.Value
-encodeEmbedded embedded =
-    Json.Encode.object
-        [ ( "spiele", Json.Encode.list encodeEmbeddedSpieleObject embedded.spiele )
-        ]
-
-
-encodeEmbeddedSpiele : List EmbeddedSpieleObject -> Json.Encode.Value
-encodeEmbeddedSpiele =
-    Json.Encode.list encodeEmbeddedSpieleMember
-
-
-encodeEmbeddedSpieleMember : EmbeddedSpieleObject -> Json.Encode.Value
-encodeEmbeddedSpieleMember embeddedSpiele =
-    encodeEmbeddedSpieleObject embeddedSpiele
-
-
-encodeEmbeddedSpieleObject : EmbeddedSpieleObject -> Json.Encode.Value
-encodeEmbeddedSpieleObject embeddedSpieleObject =
-    Json.Encode.object
-        [ ( "_links", encodeEmbeddedSpieleObjectLinks embeddedSpieleObject.links )
-        , ( "altersempfehlung", Json.Encode.int embeddedSpieleObject.altersempfehlung )
-        , ( "altersempfehlungMax", Json.Encode.int embeddedSpieleObject.altersempfehlungMax )
-        , ( "beschreibung", Json.Encode.string embeddedSpieleObject.beschreibung )
-        , ( "erscheinugsjahr", Json.Encode.string (Maybe.withDefault "" embeddedSpieleObject.erscheinugsjahr) )
-        , ( "kategorie", Json.Encode.string embeddedSpieleObject.kategorie )
-        , ( "leihpreis", Json.Encode.int embeddedSpieleObject.leihpreis )
-        , ( "name", Json.Encode.string embeddedSpieleObject.name )
-        , ( "spieldauerMinutenMax", Json.Encode.int embeddedSpieleObject.spieldauerMinutenMax )
-        , ( "spieldauerMinutenMin", Json.Encode.int embeddedSpieleObject.spieldauerMinutenMin )
-        , ( "spieldauerTyp"
-          , Json.Encode.string <|
-                case embeddedSpieleObject.spieldauerTyp of
-                    Einwert ->
-                        "Standard"
-
-                    ProSpieler ->
-                        "ProSieler"
-
-                    MinMax ->
-                        "MinMax"
-
-                    Beliebig ->
-                        "Beliebig"
-          )
-        , ( "spieleranzahlMax", Json.Encode.int embeddedSpieleObject.spieleranzahlMax )
-        , ( "spieleranzahlMin", Json.Encode.int embeddedSpieleObject.spieleranzahlMin )
-        ]
-
-
-encodeEmbeddedSpieleObjectLinks : EmbeddedSpieleObjectLinks -> Json.Encode.Value
-encodeEmbeddedSpieleObjectLinks embeddedSpieleObjectLinks =
-    Json.Encode.object
-        [ ( "self", encodeEmbeddedSpieleObjectLinksSelf embeddedSpieleObjectLinks.self )
-        , ( "spiel", encodeEmbeddedSpieleObjectLinksSpiel embeddedSpieleObjectLinks.spiel )
-        ]
-
-
-encodeEmbeddedSpieleObjectLinksSelf : EmbeddedSpieleObjectLinksSelf -> Json.Encode.Value
-encodeEmbeddedSpieleObjectLinksSelf embeddedSpieleObjectLinksSelf =
-    Json.Encode.object
-        [ ( "href", Json.Encode.string embeddedSpieleObjectLinksSelf.href )
-        ]
-
-
-encodeEmbeddedSpieleObjectLinksSpiel : EmbeddedSpieleObjectLinksSpiel -> Json.Encode.Value
-encodeEmbeddedSpieleObjectLinksSpiel embeddedSpieleObjectLinksSpiel =
-    Json.Encode.object
-        [ ( "href", Json.Encode.string embeddedSpieleObjectLinksSpiel.href )
-        ]
-
-
-encodeLinks : Links -> Json.Encode.Value
-encodeLinks links =
-    Json.Encode.object
-        [ ( "profile", encodeLinksProfile links.profile )
-        , ( "self", encodeLinksSelf links.self )
-        ]
-
-
-encodeLinksSelf : LinksSelf -> Json.Encode.Value
-encodeLinksSelf linksSelf =
-    Json.Encode.object
-        [ ( "href", Json.Encode.string linksSelf.href )
-        ]
-
-
-encodeLinksProfile : LinksProfile -> Json.Encode.Value
-encodeLinksProfile linksProfile =
-    Json.Encode.object
-        [ ( "href", Json.Encode.string linksProfile.href )
-        ]
