@@ -32,6 +32,7 @@ page shared req =
 type alias Model =
     { people : List Person
     , tableState : Table.State
+    , spiele : RequestByKategorieState
     }
 
 
@@ -39,10 +40,10 @@ type ConnectionStateSpiele
     = SpieleLoading
 
 
-type ConnectionStateByKategorie
+type RequestByKategorieState
     = ByKategorieFailure
     | ByKategorieLoading
-    | ByKategorieSuccess (List ( String, List Spiel ))
+    | ByKategorieSuccess (List KategorieTupel)
 
 
 
@@ -55,10 +56,11 @@ init : ( Model, Cmd Msg )
 init =
     ( { people = presidents
       , tableState = Table.initialSort "Year"
+      , spiele = ByKategorieLoading
       }
     , Http.get
         { url = "http://localhost:8080/kategorie"
-        , expect = Http.expectJson NoopByKategorie rootDecoder
+        , expect = Http.expectJson SpieleByKategorieReceived rootDecoder
         }
     )
 
@@ -71,7 +73,7 @@ type Msg
     = ReplaceMe
     | Noop (Result Http.Error String)
     | SetTableState Table.State
-    | NoopByKategorie (Result Http.Error (List KategorieTupel))
+    | SpieleByKategorieReceived (Result Http.Error (List KategorieTupel))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -92,12 +94,17 @@ update msg model =
             , Cmd.none
             )
 
-        NoopByKategorie result ->
+        SpieleByKategorieReceived result ->
             let
                 _ =
                     log "result" result
             in
-            noChange
+            case result of
+                Ok value ->
+                    ( { model | spiele = ByKategorieSuccess value }, Cmd.none )
+
+                Err error ->
+                    noChange
 
 
 
