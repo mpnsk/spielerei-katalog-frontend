@@ -202,6 +202,10 @@ tableConfig =
         spieleranzahl : Spiel -> String
         spieleranzahl spiel =
             String.fromInt spiel.spieleranzahlMin ++ "-" ++ String.fromInt spiel.spieleranzahlMax
+
+        kategorie : Spiel -> String
+        kategorie spiel =
+            spiel.kategorie.name
     in
     Table.customConfig
         { toId = \data -> String.fromInt data.id
@@ -211,6 +215,7 @@ tableConfig =
             , Table.stringColumn "Spieldauer" spieldauer
             , Table.stringColumn "Spieler" spieleranzahl
             , Table.intColumn "Alter" .altersempfehlung
+            , Table.stringColumn "Kategorie" kategorie
 
             --, columnErscheinungsjahr
             --, Table.stringColumn "City" .city
