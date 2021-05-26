@@ -1,6 +1,7 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
-import Decode.ByKategorie exposing (KategorieTupel)
+import Debug exposing (log)
+import Decode.ByKategorie exposing (KategorieTupel, rootDecoder)
 import Decode.Spiel exposing (Spiel)
 import Decode.SpringDataRestSpiel exposing (..)
 import Gen.Params.Home exposing (Params)
@@ -57,7 +58,7 @@ init =
       }
     , Http.get
         { url = "http://localhost:8080/kategorie"
-        , expect = Http.expectString Noop
+        , expect = Http.expectJson NoopByKategorie rootDecoder
         }
     )
 
@@ -70,13 +71,18 @@ type Msg
     = ReplaceMe
     | Noop (Result Http.Error String)
     | SetTableState Table.State
+    | NoopByKategorie (Result Http.Error (List KategorieTupel))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        noChange =
+            ( model, Cmd.none )
+    in
     case msg of
         ReplaceMe ->
-            ( model, Cmd.none )
+            noChange
 
         Noop result ->
             ( model, Cmd.none )
@@ -85,6 +91,13 @@ update msg model =
             ( { model | tableState = newState }
             , Cmd.none
             )
+
+        NoopByKategorie result ->
+            let
+                _ =
+                    log "result" result
+            in
+            noChange
 
 
 
