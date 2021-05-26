@@ -117,18 +117,7 @@ view model =
     { title = "GetJson"
     , body =
         List.map toUnstyled
-            [ select [ Attributes.multiple True ]
-                [ optgroup []
-                    [ option [] [ text "html text1" ]
-                    , option [] [ text "html text2" ]
-                    , option [] [ text "html text3" ]
-                    ]
-                ]
-            , span [ css [ Tw.bg_red_200 ] ] [ text "a text" ]
-            , div [ css [ Tw.bg_blue_500 ] ] [ fromUnstyled <| Html.text "fromunstyled" ]
-
-            --, div [ css [ Tw.sticky, Tw.bg_red_500, Tw.top_0 ] ] [ text "sticky caption" ]
-            , let
+            [ let
                 { people, tableState, spieleRequest } =
                     model
               in
@@ -169,7 +158,7 @@ tableConfig =
         defaultCustomizations =
             Table.defaultCustomizations
 
-        custom =
+        customizations =
             { defaultCustomizations
                 | tableAttrs = [ Html.Attributes.style "width" "100%" ]
                 , thead = tableHead
@@ -216,7 +205,7 @@ tableConfig =
             --, Table.stringColumn "City" .city
             --, Table.stringColumn "State" .state
             ]
-        , customizations = custom
+        , customizations = customizations
         }
 
 
