@@ -32,6 +32,7 @@ page shared req =
 type alias Model =
     { tableState : Table.State
     , spieleRequest : RequestByKategorieState
+    , kategorieSelected : List String
     }
 
 
@@ -51,6 +52,7 @@ init : ( Model, Cmd Msg )
 init =
     ( { tableState = Table.initialSort "Year"
       , spieleRequest = ByKategorieLoading
+      , kategorieSelected = [ "Klassiker" ]
       }
     , Http.get
         { url = "http://192.168.178.24:8080/kategorie"
@@ -90,7 +92,7 @@ update msg model =
                 _ =
                     Debug.log "kategorien: " strings
             in
-            ( model, Cmd.none )
+            ( { model | kategorieSelected = strings }, Cmd.none )
 
 
 
@@ -132,7 +134,7 @@ view model =
     { title = "GetJson"
     , body =
         List.map toUnstyled
-            [ fromUnstyled <| multiSelect (multiselectOptions model) [] []
+            [ fromUnstyled <| multiSelect (multiselectOptions model) [] model.kategorieSelected
             , let
                 { tableState, spieleRequest } =
                     model
@@ -145,7 +147,7 @@ view model =
                     text "lade"
 
                 ByKategorieSuccess list ->
-                    fromUnstyled <| Table.view tableConfig tableState <| flattenSpiele list
+                    fromUnstyled <| Table.view tableConfig tableState <| flattenSpiele list model.kategorieSelected
             ]
     }
 
@@ -221,11 +223,18 @@ tableConfig =
         }
 
 
-flattenSpiele : List KategorieTupel -> List Spiel
-flattenSpiele byKatgorie =
+flattenSpiele : List KategorieTupel -> List String -> List Spiel
+flattenSpiele byKatgorie kategorieSelected =
     let
         getSpieleList : KategorieTupel -> List Spiel
         getSpieleList tuple =
-            Tuple.second tuple
+            if kategorieSelected == [] then
+                Tuple.second tuple
+
+            else if List.member (Tuple.first tuple) kategorieSelected then
+                Tuple.second tuple
+
+            else
+                []
     in
     List.concatMap getSpieleList byKatgorie
