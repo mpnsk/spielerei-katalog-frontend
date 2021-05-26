@@ -1,6 +1,5 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
-import Debug exposing (log)
 import Decode.ByKategorie exposing (KategorieTupel, rootDecoder)
 import Decode.Spiel exposing (Spiel)
 import Decode.SpringDataRestSpiel exposing (..)
@@ -91,10 +90,6 @@ update msg model =
             )
 
         SpieleByKategorieReceived result ->
-            let
-                _ =
-                    log "result" result
-            in
             case result of
                 Ok value ->
                     ( { model | spieleRequest = ByKategorieSuccess value }, Cmd.none )
