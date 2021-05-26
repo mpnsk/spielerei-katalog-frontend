@@ -32,12 +32,8 @@ page shared req =
 type alias Model =
     { people : List Person
     , tableState : Table.State
-    , spiele : RequestByKategorieState
+    , spieleByKategorieRequest : RequestByKategorieState
     }
-
-
-type ConnectionStateSpiele
-    = SpieleLoading
 
 
 type RequestByKategorieState
@@ -56,7 +52,7 @@ init : ( Model, Cmd Msg )
 init =
     ( { people = presidents
       , tableState = Table.initialSort "Year"
-      , spiele = ByKategorieLoading
+      , spieleByKategorieRequest = ByKategorieLoading
       }
     , Http.get
         { url = "http://localhost:8080/kategorie"
@@ -101,10 +97,10 @@ update msg model =
             in
             case result of
                 Ok value ->
-                    ( { model | spiele = ByKategorieSuccess value }, Cmd.none )
+                    ( { model | spieleByKategorieRequest = ByKategorieSuccess value }, Cmd.none )
 
                 Err error ->
-                    noChange
+                    ( { model | spieleByKategorieRequest = ByKategorieFailure }, Cmd.none )
 
 
 
@@ -158,7 +154,7 @@ tableHead list =
                     , Html.Attributes.style "top" "0px"
                     , Html.Attributes.style "padding" "10px"
                     ]
-                    [ Html.text <| " " ++ name ++ " " ]
+                    [ Html.text <| name ]
             )
             list
 
@@ -172,19 +168,7 @@ config =
 
         custom =
             { defaultCustomizations
-                | caption =
-                    Just
-                        { attributes = []
-                        , children =
-                            --[ toUnstyled <|
-                            --    div []
-                            --        [ div [ css [ Tw.sticky, Tw.bg_red_500, Tw.top_0, Tw.w_full ] ]
-                            --            [ text "sticky caption" ]
-                            --        ]
-                            --]
-                            []
-                        }
-                , tableAttrs = [ Html.Attributes.style "width" "100%" ]
+                | tableAttrs = [ Html.Attributes.style "width" "100%" ]
                 , thead = tableHead
             }
     in
