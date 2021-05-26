@@ -10,6 +10,7 @@ import Html.Styled exposing (div, fromUnstyled, optgroup, option, select, span, 
 import Html.Styled.Attributes as Attributes exposing (css)
 import Http
 import Json.Decode exposing (..)
+import MultiSelect exposing (multiSelect)
 import Page
 import Request
 import Shared
@@ -65,6 +66,7 @@ init =
 type Msg
     = SetTableState Table.State
     | SpieleByKategorieReceived (Result Http.Error (List KategorieTupel))
+    | MultiSelectChanged (List String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -83,6 +85,13 @@ update msg model =
                 Err error ->
                     ( { model | spieleRequest = ByKategorieFailure }, Cmd.none )
 
+        MultiSelectChanged strings ->
+            let
+                _ =
+                    Debug.log "kategorien: " strings
+            in
+            ( model, Cmd.none )
+
 
 
 -- SUBSCRIPTIONS
@@ -91,6 +100,27 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
+
+
+multiselectOptions : Model -> MultiSelect.Options Msg
+multiselectOptions model =
+    let
+        defaultOptions =
+            MultiSelect.defaultOptions MultiSelectChanged
+
+        kategorieTitel : List String
+        kategorieTitel =
+            case model.spieleRequest of
+                ByKategorieSuccess list ->
+                    List.map (\t -> Tuple.first t) list
+
+                _ ->
+                    []
+    in
+    { defaultOptions
+        | items =
+            List.map (\s -> { value = s, text = s, enabled = True }) kategorieTitel
+    }
 
 
 
@@ -102,7 +132,8 @@ view model =
     { title = "GetJson"
     , body =
         List.map toUnstyled
-            [ let
+            [ fromUnstyled <| multiSelect (multiselectOptions model) [] []
+            , let
                 { tableState, spieleRequest } =
                     model
               in
