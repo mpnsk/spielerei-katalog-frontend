@@ -1,4 +1,4 @@
-module Decode.SpielDecoder exposing (..)
+module Decode.SpringDataRestSpiel exposing (..)
 
 import Json.Decode
 

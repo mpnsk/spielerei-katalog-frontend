@@ -1,7 +1,7 @@
 module Decode.ByKategorieTest exposing (..)
 
-import Decode.ByKategorie exposing (KlassikerObject)
-import Decode.SpielDecoder exposing (EmbeddedSpieleObject)
+import Decode.Spiel exposing (Spiel, spielObjectDecoder)
+import Decode.SpringDataRestSpiel exposing (EmbeddedSpieleObject)
 import Expect
 import Json.Decode
 import Test exposing (..)
@@ -54,16 +54,16 @@ keyValueTest =
 
                 actual =
                     let
-                        decoder : Json.Decode.Decoder (List ( String, List KlassikerObject ))
+                        decoder : Json.Decode.Decoder (List ( String, List Spiel ))
                         decoder =
-                            Json.Decode.keyValuePairs (Json.Decode.list Decode.ByKategorie.klassikerObjectDecoder)
+                            Json.Decode.keyValuePairs (Json.Decode.list spielObjectDecoder)
                     in
                     [ Json.Decode.decodeString decoder jsonToTest ]
             in
             Expect.equal expected actual
 
 
-spielKniffel : KlassikerObject
+spielKniffel : Spiel
 spielKniffel =
     { id = 172
     , name = "Kniffel"

@@ -1,7 +1,8 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
-import Decode.ByKategorie exposing (KategorieTupel, KlassikerObject)
-import Decode.SpielDecoder exposing (..)
+import Decode.ByKategorie exposing (KategorieTupel)
+import Decode.Spiel exposing (Spiel)
+import Decode.SpringDataRestSpiel exposing (..)
 import Gen.Params.Home exposing (Params)
 import Html
 import Html.Attributes
@@ -40,7 +41,7 @@ type ConnectionStateSpiele
 type ConnectionStateByKategorie
     = ByKategorieFailure
     | ByKategorieLoading
-    | ByKategorieSuccess (List ( String, List KlassikerObject ))
+    | ByKategorieSuccess (List ( String, List Spiel ))
 
 
 
