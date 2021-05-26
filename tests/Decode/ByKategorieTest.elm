@@ -73,7 +73,7 @@ spielKniffel =
     , spieldauerMinutenMax = 0
 
     --, erscheinugsjahr = Just "123"
-    , erscheinugsjahr = Nothing
+    , erscheinungsjahr = Nothing
     , kategorie = { id = 12, name = "Klassiker" }
     , leihpreis = 0
     , altersempfehlung = 8

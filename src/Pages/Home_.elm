@@ -32,7 +32,7 @@ page shared req =
 type alias Model =
     { people : List Person
     , tableState : Table.State
-    , spieleByKategorieRequest : RequestByKategorieState
+    , spieleRequest : RequestByKategorieState
     }
 
 
@@ -52,10 +52,10 @@ init : ( Model, Cmd Msg )
 init =
     ( { people = presidents
       , tableState = Table.initialSort "Year"
-      , spieleByKategorieRequest = ByKategorieLoading
+      , spieleRequest = ByKategorieLoading
       }
     , Http.get
-        { url = "http://localhost:8080/kategorie"
+        { url = "http://192.168.178.24:8080/kategorie"
         , expect = Http.expectJson SpieleByKategorieReceived rootDecoder
         }
     )
@@ -97,10 +97,10 @@ update msg model =
             in
             case result of
                 Ok value ->
-                    ( { model | spieleByKategorieRequest = ByKategorieSuccess value }, Cmd.none )
+                    ( { model | spieleRequest = ByKategorieSuccess value }, Cmd.none )
 
                 Err error ->
-                    ( { model | spieleByKategorieRequest = ByKategorieFailure }, Cmd.none )
+                    ( { model | spieleRequest = ByKategorieFailure }, Cmd.none )
 
 
 
@@ -134,10 +134,18 @@ view model =
 
             --, div [ css [ Tw.sticky, Tw.bg_red_500, Tw.top_0 ] ] [ text "sticky caption" ]
             , let
-                { people, tableState } =
+                { people, tableState, spieleRequest } =
                     model
               in
-              fromUnstyled <| Table.view config tableState people
+              case spieleRequest of
+                ByKategorieFailure ->
+                    text "fehler"
+
+                ByKategorieLoading ->
+                    text "lade"
+
+                ByKategorieSuccess list ->
+                    fromUnstyled <| Table.view tableConfig tableState <| flattenSpiele list
             ]
     }
 
@@ -152,15 +160,15 @@ tableHead list =
                     , Html.Attributes.style "position" "sticky"
                     , Html.Attributes.style "background-color" "white"
                     , Html.Attributes.style "top" "0px"
-                    , Html.Attributes.style "padding" "10px"
+                    , Html.Attributes.style "padding" "20px"
                     ]
                     [ Html.text <| name ]
             )
             list
 
 
-config : Table.Config Person Msg
-config =
+tableConfig : Table.Config Spiel Msg
+tableConfig =
     let
         defaultCustomizations : Table.Customizations data msg
         defaultCustomizations =
@@ -171,15 +179,42 @@ config =
                 | tableAttrs = [ Html.Attributes.style "width" "100%" ]
                 , thead = tableHead
             }
+
+        columnErscheinungsjahr =
+            Table.stringColumn "Year"
+                (\data ->
+                    let
+                        jahr =
+                            case data.erscheinungsjahr of
+                                Just x ->
+                                    x
+
+                                Nothing ->
+                                    ""
+                    in
+                    jahr
+                )
+
+        spieldauer : Spiel -> String
+        spieldauer spiel =
+            String.fromInt spiel.spieldauerMinutenMin ++ "-" ++ String.fromInt spiel.spieldauerMinutenMax
+
+        spieleranzahl : Spiel -> String
+        spieleranzahl spiel =
+            String.fromInt spiel.spieleranzahlMin ++ "-" ++ String.fromInt spiel.spieleranzahlMax
     in
     Table.customConfig
-        { toId = .name
+        { toId = \data -> String.fromInt data.id
         , toMsg = SetTableState
         , columns =
             [ Table.stringColumn "Name" .name
-            , Table.intColumn "Year" .year
-            , Table.stringColumn "City" .city
-            , Table.stringColumn "State" .state
+            , Table.stringColumn "Spieldauer" spieldauer
+            , Table.stringColumn "Spieler" spieleranzahl
+            , Table.intColumn "Alter" .altersempfehlung
+
+            --, columnErscheinungsjahr
+            --, Table.stringColumn "City" .city
+            --, Table.stringColumn "State" .state
             ]
         , customizations = custom
         }
@@ -191,6 +226,16 @@ type alias Person =
     , city : String
     , state : String
     }
+
+
+flattenSpiele : List KategorieTupel -> List Spiel
+flattenSpiele byKatgorie =
+    let
+        getSpieleList : KategorieTupel -> List Spiel
+        getSpieleList tuple =
+            Tuple.second tuple
+    in
+    List.concatMap getSpieleList byKatgorie
 
 
 presidents : List Person

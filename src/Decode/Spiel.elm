@@ -7,7 +7,7 @@ type alias Spiel =
     { altersempfehlung : Int
     , altersempfehlungMax : Int
     , beschreibung : String
-    , erscheinugsjahr : Maybe String
+    , erscheinungsjahr : Maybe String
     , id : Int
     , kategorie : KategorieObject
     , leihpreis : Int
