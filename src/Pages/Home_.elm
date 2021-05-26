@@ -52,7 +52,7 @@ init : ( Model, Cmd Msg )
 init =
     ( { tableState = Table.initialSort "Year"
       , spieleRequest = ByKategorieLoading
-      , kategorieSelected = [ "Klassiker" ]
+      , kategorieSelected = [ "Klassiker", "Builder", "Gamer's Games", "Familienspiele", "Würfelspiel", "Strategiespiele", "Knobelspiel", "Partyspiel", "Quiz", "Wirtschaftsspiele", "Kartenspiel", "2-Personen-Spiele" ]
       }
     , Http.get
         { url = "http://192.168.178.24:8080/kategorie"
@@ -125,6 +125,11 @@ multiselectOptions model =
     }
 
 
+style : String -> String -> Html.Attribute msg
+style key value =
+    Html.Attributes.style key value
+
+
 
 -- VIEW
 
@@ -134,7 +139,7 @@ view model =
     { title = "GetJson"
     , body =
         List.map toUnstyled
-            [ fromUnstyled <| multiSelect (multiselectOptions model) [] model.kategorieSelected
+            [ fromUnstyled <| multiSelect (multiselectOptions model) [ style "width" "100%", style "height" "100%", Html.Attributes.size 12 ] model.kategorieSelected
             , let
                 { tableState, spieleRequest } =
                     model
@@ -152,7 +157,7 @@ view model =
     }
 
 
-tableHead : List ( String, b, Html.Attribute msg ) -> Table.HtmlDetails msg
+tableHead : List ( String, Table.Status, Html.Attribute msg ) -> Table.HtmlDetails msg
 tableHead list =
     Table.HtmlDetails [] <|
         List.map
@@ -164,9 +169,62 @@ tableHead list =
                     , Html.Attributes.style "top" "0px"
                     , Html.Attributes.style "padding" "20px"
                     ]
-                    [ Html.text <| name ]
+                <|
+                    case status of
+                        Table.Unsortable ->
+                            [ Html.text name ]
+
+                        Table.Sortable bool ->
+                            [ Html.button []
+                                [ Html.text name
+                                , if bool then
+                                    darkGrey "↓"
+
+                                  else
+                                    lightGrey "↓"
+                                ]
+                            ]
+
+                        Table.Reversible (Just descending) ->
+                            [ Html.button [] <|
+                                if descending then
+                                    [ Html.text name
+                                    , Html.span [ styleLight ] [ Html.text "↑" ]
+                                    , Html.span [ styleDark ] [ Html.text "↓" ]
+                                    ]
+
+                                else
+                                    [ Html.text name
+                                    , Html.span [ styleDark ] [ Html.text "↑" ]
+                                    , Html.span [ styleLight ] [ Html.text "↓" ]
+                                    ]
+                            ]
+
+                        Table.Reversible Nothing ->
+                            [ Html.button []
+                                [ Html.text name
+                                , Html.span [ styleLight ] [ Html.text "↑" ]
+                                , Html.span [ styleLight ] [ Html.text "↓" ]
+                                ]
+                            ]
             )
             list
+
+
+styleDark =
+    Html.Attributes.style "color" "#555"
+
+
+styleLight =
+    Html.Attributes.style "color" "#ccc"
+
+
+darkGrey symbol =
+    Html.span [ styleDark ] [ Html.text (" " ++ symbol) ]
+
+
+lightGrey symbol =
+    Html.span [ styleLight ] [ Html.text (" " ++ symbol) ]
 
 
 tableConfig : Table.Config Spiel Msg
