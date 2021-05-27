@@ -3,7 +3,7 @@ module Pages.Home_ exposing (Model, Msg, page)
 import Decode.ByKategorie exposing (KategorieTupel, rootDecoder)
 import Decode.Spiel exposing (Spiel)
 import Decode.SpringDataRestSpiel exposing (..)
-import Gen.Params.Home exposing (Params)
+import Gen.Params.Home_ exposing (Params)
 import Html
 import Html.Attributes
 import Html.Styled exposing (div, fromUnstyled, optgroup, option, select, span, text, toUnstyled)
@@ -11,6 +11,7 @@ import Html.Styled.Attributes as Attributes exposing (css)
 import Http
 import Json.Decode exposing (..)
 import MultiSelect exposing (multiSelect)
+import NaturalOrdering
 import Page
 import Request
 import Shared
@@ -263,6 +264,10 @@ tableConfig =
         spieleranzahl spiel =
             String.fromInt spiel.spieleranzahlMin ++ "-" ++ String.fromInt spiel.spieleranzahlMax
 
+        incOrDecSpieldauerNatural : Table.Sorter Spiel
+        incOrDecSpieldauerNatural =
+            Table.IncOrDec (List.sortWith <| NaturalOrdering.compareOn spieldauer)
+
         kategorie : Spiel -> String
         kategorie spiel =
             spiel.kategorie.name
@@ -273,6 +278,7 @@ tableConfig =
         , columns =
             [ Table.stringColumn "Name" .name
             , Table.stringColumn "Spieldauer" spieldauer
+            , Table.customColumn { name = "Spieldauer-custom", viewData = spieldauer, sorter = incOrDecSpieldauerNatural }
             , Table.stringColumn "Spieler" spieleranzahl
             , Table.intColumn "Alter" .altersempfehlung
             , Table.stringColumn "Kategorie" kategorie
