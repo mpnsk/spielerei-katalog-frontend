@@ -331,7 +331,7 @@ tableConfig =
         { toId = \data -> String.fromInt data.id
         , toMsg = SetTableState
         , columns =
-            [ Table.stringColumn "Name" .name
+            [ Table.customColumn { name = "Name", viewData = .name, sorter = incOrDecNaturalSortOn .name }
 
             --, Table.stringColumn "Spieldauer" spieldauer
             , Table.customColumn { name = "Spieldauer-custom", viewData = spieldauer, sorter = incOrDecNaturalSortOn spieldauer }
