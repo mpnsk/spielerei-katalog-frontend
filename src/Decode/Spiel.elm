@@ -27,27 +27,29 @@ type SpieldauerTyp
     | Beliebig
 
 
-spieldauerTypDecoder : Json.Decode.Decoder SpieldauerTyp
+spieldauerTypDecoder : Json.Decode.Decoder (Maybe SpieldauerTyp)
 spieldauerTypDecoder =
-    Json.Decode.field "spieldauerTyp" Json.Decode.string
-        |> Json.Decode.andThen
-            (\str ->
-                case str of
-                    "Einwert" ->
-                        Json.Decode.succeed Einwert
+    Json.Decode.maybe
+        (Json.Decode.string
+            |> Json.Decode.andThen
+                (\str ->
+                    case str of
+                        "Einwert" ->
+                            Json.Decode.succeed Einwert
 
-                    "ProSpieler" ->
-                        Json.Decode.succeed ProSpieler
+                        "ProSpieler" ->
+                            Json.Decode.succeed ProSpieler
 
-                    "MinMax" ->
-                        Json.Decode.succeed MinMax
+                        "MinMax" ->
+                            Json.Decode.succeed MinMax
 
-                    "Beliebig" ->
-                        Json.Decode.succeed Beliebig
+                        "Beliebig" ->
+                            Json.Decode.succeed Beliebig
 
-                    _ ->
-                        Json.Decode.fail ("Trying to decode, but spieldauerTyp " ++ str ++ " is not supported.")
-            )
+                        _ ->
+                            Json.Decode.fail ("Trying to decode, but spieldauerTyp " ++ str ++ " is not supported.")
+                )
+        )
 
 
 spielMemberDecoder : Json.Decode.Decoder Spiel
@@ -73,7 +75,7 @@ spielObjectDecoder =
         fieldSet0
         (Json.Decode.field "spieldauerMinutenMax" Json.Decode.int)
         (Json.Decode.field "spieldauerMinutenMin" Json.Decode.int)
-        (Json.Decode.field "spieldauerTyp" <| Json.Decode.maybe spieldauerTypDecoder)
+        (Json.Decode.field "spieldauerTyp" spieldauerTypDecoder)
         (Json.Decode.field "spieleranzahlMax" Json.Decode.int)
         (Json.Decode.field "spieleranzahlMin" Json.Decode.int)
 

@@ -258,7 +258,12 @@ tableConfig =
 
         spieldauer : Spiel -> String
         spieldauer spiel =
-            String.fromInt spiel.spieldauerMinutenMin ++ "-" ++ String.fromInt spiel.spieldauerMinutenMax
+            case spiel.spieldauerTyp of
+                Nothing ->
+                    "Fehler"
+
+                _ ->
+                    String.fromInt spiel.spieldauerMinutenMin ++ "-" ++ String.fromInt spiel.spieldauerMinutenMax
 
         spieleranzahl : Spiel -> String
         spieleranzahl spiel =
