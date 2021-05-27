@@ -140,7 +140,13 @@ view model =
     { title = "GetJson"
     , body =
         List.map toUnstyled
-            [ fromUnstyled <| multiSelect (multiselectOptions model) [ style "width" "100%", style "height" "100%", Html.Attributes.size 12 ] model.kategorieSelected
+            [ fromUnstyled <|
+                multiSelect (multiselectOptions model)
+                    [ style "width" "100%"
+                    , style "height" "100%"
+                    , Html.Attributes.size 12
+                    ]
+                    model.kategorieSelected
             , let
                 { tableState, spieleRequest } =
                     model
@@ -342,10 +348,7 @@ flattenSpiele byKatgorie kategorieSelected =
     let
         getSpieleList : KategorieTupel -> List Spiel
         getSpieleList tuple =
-            if kategorieSelected == [] then
-                Tuple.second tuple
-
-            else if List.member (Tuple.first tuple) kategorieSelected then
+            if List.member (Tuple.first tuple) kategorieSelected || kategorieSelected == [] then
                 Tuple.second tuple
 
             else
