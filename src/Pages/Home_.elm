@@ -262,30 +262,75 @@ tableConfig =
                 Nothing ->
                     "Fehler"
 
-                _ ->
-                    String.fromInt spiel.spieldauerMinutenMin ++ "-" ++ String.fromInt spiel.spieldauerMinutenMax
+                Just t ->
+                    case t of
+                        Decode.Spiel.Einwert ->
+                            if spiel.spieldauerMinutenMin == 0 then
+                                ""
+
+                            else
+                                String.fromInt spiel.spieldauerMinutenMin
+
+                        Decode.Spiel.ProSpieler ->
+                            if spiel.spieldauerMinutenMax == 0 then
+                                String.fromInt spiel.spieldauerMinutenMin ++ " pro Spieler"
+
+                            else
+                                String.fromInt spiel.spieldauerMinutenMin ++ "-" ++ String.fromInt spiel.spieldauerMinutenMax ++ " pro Spieler"
+
+                        Decode.Spiel.MinMax ->
+                            String.fromInt spiel.spieldauerMinutenMin ++ "-" ++ String.fromInt spiel.spieldauerMinutenMax
+
+                        Decode.Spiel.Beliebig ->
+                            "beliebig"
 
         spieleranzahl : Spiel -> String
         spieleranzahl spiel =
-            String.fromInt spiel.spieleranzahlMin ++ "-" ++ String.fromInt spiel.spieleranzahlMax
+            if spiel.spieleranzahlMax == 99 then
+                String.fromInt spiel.spieleranzahlMin ++ "+"
 
-        incOrDecSpieldauerNatural : Table.Sorter Spiel
-        incOrDecSpieldauerNatural =
-            Table.IncOrDec (List.sortWith <| NaturalOrdering.compareOn spieldauer)
+            else if spiel.spieleranzahlMin == spiel.spieleranzahlMax then
+                if spiel.spieleranzahlMin == 0 then
+                    ""
+
+                else
+                    String.fromInt spiel.spieleranzahlMin
+
+            else
+                String.fromInt spiel.spieleranzahlMin ++ "-" ++ String.fromInt spiel.spieleranzahlMax
+
+        incOrDecNaturalSortOn : (Spiel -> String) -> Table.Sorter Spiel
+        incOrDecNaturalSortOn on =
+            Table.IncOrDec (List.sortWith <| NaturalOrdering.compareOn on)
 
         kategorie : Spiel -> String
         kategorie spiel =
             spiel.kategorie.name
+
+        alter : Spiel -> String
+        alter spiel =
+            if spiel.altersempfehlung == 0 then
+                ""
+
+            else if spiel.altersempfehlungMax == 0 then
+                String.fromInt spiel.altersempfehlung
+
+            else if spiel.altersempfehlungMax == 99 then
+                String.fromInt spiel.altersempfehlung ++ "+"
+
+            else
+                String.fromInt spiel.altersempfehlung ++ "-" ++ String.fromInt spiel.altersempfehlungMax
     in
     Table.customConfig
         { toId = \data -> String.fromInt data.id
         , toMsg = SetTableState
         , columns =
             [ Table.stringColumn "Name" .name
-            , Table.stringColumn "Spieldauer" spieldauer
-            , Table.customColumn { name = "Spieldauer-custom", viewData = spieldauer, sorter = incOrDecSpieldauerNatural }
+
+            --, Table.stringColumn "Spieldauer" spieldauer
+            , Table.customColumn { name = "Spieldauer-custom", viewData = spieldauer, sorter = incOrDecNaturalSortOn spieldauer }
             , Table.stringColumn "Spieler" spieleranzahl
-            , Table.intColumn "Alter" .altersempfehlung
+            , Table.customColumn { name = "Alter", viewData = alter, sorter = incOrDecNaturalSortOn alter }
             , Table.stringColumn "Kategorie" kategorie
             ]
         , customizations = customizations
