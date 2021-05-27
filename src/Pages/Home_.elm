@@ -334,7 +334,7 @@ tableConfig =
             [ Table.customColumn { name = "Name", viewData = .name, sorter = incOrDecNaturalSortOn .name }
 
             --, Table.stringColumn "Spieldauer" spieldauer
-            , Table.customColumn { name = "Spieldauer-custom", viewData = spieldauer, sorter = incOrDecNaturalSortOn spieldauer }
+            , Table.customColumn { name = "Spielminuten", viewData = spieldauer, sorter = incOrDecNaturalSortOn spieldauer }
             , Table.stringColumn "Spieler" spieleranzahl
             , Table.customColumn { name = "Alter", viewData = alter, sorter = incOrDecNaturalSortOn alter }
             , Table.stringColumn "Kategorie" kategorie
