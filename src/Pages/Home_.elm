@@ -182,37 +182,31 @@ tableHead list =
                             [ Html.text name ]
 
                         Table.Sortable bool ->
-                            [ Html.button []
-                                [ Html.text name
-                                , if bool then
-                                    darkGrey "↓"
+                            [ Html.text name
+                            , if bool then
+                                darkGrey "↓"
 
-                                  else
-                                    lightGrey "↓"
-                                ]
+                              else
+                                lightGrey "↓"
                             ]
 
                         Table.Reversible (Just descending) ->
-                            [ Html.button [] <|
-                                if descending then
-                                    [ Html.text name
-                                    , Html.span [ styleLight ] [ Html.text "↑" ]
-                                    , Html.span [ styleDark ] [ Html.text "↓" ]
-                                    ]
-
-                                else
-                                    [ Html.text name
-                                    , Html.span [ styleDark ] [ Html.text "↑" ]
-                                    , Html.span [ styleLight ] [ Html.text "↓" ]
-                                    ]
-                            ]
-
-                        Table.Reversible Nothing ->
-                            [ Html.button []
+                            if descending then
                                 [ Html.text name
                                 , Html.span [ styleLight ] [ Html.text "↑" ]
+                                , Html.span [ styleDark ] [ Html.text "↓" ]
+                                ]
+
+                            else
+                                [ Html.text name
+                                , Html.span [ styleDark ] [ Html.text "↑" ]
                                 , Html.span [ styleLight ] [ Html.text "↓" ]
                                 ]
+
+                        Table.Reversible Nothing ->
+                            [ Html.text name
+                            , Html.span [ styleLight ] [ Html.text "↑" ]
+                            , Html.span [ styleLight ] [ Html.text "↓" ]
                             ]
             )
             list
