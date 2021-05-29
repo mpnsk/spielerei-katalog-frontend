@@ -9,6 +9,7 @@ import Html.Attributes
 import Html.Styled exposing (div, fromUnstyled, optgroup, option, select, span, text, toUnstyled)
 import Html.Styled.Attributes as Attributes exposing (css)
 import Http
+import Input.Number
 import Json.Decode exposing (..)
 import MultiSelect exposing (multiSelect)
 import NaturalOrdering
@@ -34,6 +35,7 @@ type alias Model =
     { tableState : Table.State
     , spieleRequest : RequestByKategorieState
     , kategorieSelected : List String
+    , spieleranzahl : Maybe Int
     }
 
 
@@ -54,6 +56,7 @@ init =
     ( { tableState = Table.initialSort "Year"
       , spieleRequest = ByKategorieLoading
       , kategorieSelected = [ "Klassiker", "Builder", "Gamer's Games", "Familienspiele", "Würfelspiel", "Strategiespiele", "Knobelspiel", "Partyspiel", "Quiz", "Wirtschaftsspiele", "Kartenspiel", "2-Personen-Spiele" ]
+      , spieleranzahl = Just 2
       }
     , Http.get
         { url = "http://192.168.178.24:8080/kategorie"
@@ -70,6 +73,8 @@ type Msg
     = SetTableState Table.State
     | SpieleByKategorieReceived (Result Http.Error (List KategorieTupel))
     | MultiSelectChanged (List String)
+    | InputUpdated (Maybe Int)
+    | InputFocus Bool
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -94,6 +99,20 @@ update msg model =
                     Debug.log "kategorien: " strings
             in
             ( { model | kategorieSelected = strings }, Cmd.none )
+
+        InputUpdated maybeInt ->
+            let
+                _ =
+                    Debug.log "inputupdated" maybeInt
+            in
+            ( { model | spieleranzahl = maybeInt }, Cmd.none )
+
+        InputFocus bool ->
+            let
+                _ =
+                    Debug.log "inputfocus" bool
+            in
+            ( model, Cmd.none )
 
 
 
@@ -139,28 +158,27 @@ view : Model -> View Msg
 view model =
     { title = "GetJson"
     , body =
-        List.map toUnstyled
-            [ fromUnstyled <|
-                multiSelect (multiselectOptions model)
-                    [ style "width" "100%"
-                    , style "height" "100%"
-                    , Html.Attributes.size 12
-                    ]
-                    model.kategorieSelected
-            , let
-                { tableState, spieleRequest } =
-                    model
-              in
-              case spieleRequest of
-                ByKategorieFailure ->
-                    text "fehler"
-
-                ByKategorieLoading ->
-                    text "lade"
-
-                ByKategorieSuccess list ->
-                    fromUnstyled <| Table.view tableConfig tableState <| flattenSpiele list model.kategorieSelected
+        [ Input.Number.input { onInput = InputUpdated, maxLength = Nothing, maxValue = Just 20, minValue = Just 1, hasFocus = Just InputFocus } [] model.spieleranzahl
+        , multiSelect (multiselectOptions model)
+            [ style "width" "100%"
+            , style "height" "100%"
+            , Html.Attributes.size 12
             ]
+            model.kategorieSelected
+        , let
+            { tableState, spieleRequest } =
+                model
+          in
+          case spieleRequest of
+            ByKategorieFailure ->
+                Html.text "fehler"
+
+            ByKategorieLoading ->
+                Html.text "lade"
+
+            ByKategorieSuccess list ->
+                Table.view tableConfig tableState <| flattenSpiele list model.kategorieSelected
+        ]
     }
 
 
