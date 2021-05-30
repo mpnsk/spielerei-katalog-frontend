@@ -263,12 +263,12 @@ simpleTheadHelp ( name, status, onClick_ ) =
 
 darkGrey : String -> Html.Styled.Html msg
 darkGrey symbol =
-    Html.Styled.span [ Html.Styled.Attributes.attribute "color" "#555" ] [ Html.Styled.text (" " ++ symbol) ]
+    Html.Styled.span [ Html.Styled.Attributes.style "color" "#555" ] [ Html.Styled.text (" " ++ symbol) ]
 
 
 lightGrey : String -> Html.Styled.Html msg
 lightGrey symbol =
-    Html.Styled.span [ Html.Styled.Attributes.attribute "color" "#ccc" ] [ Html.Styled.text (" " ++ symbol) ]
+    Html.Styled.span [ Html.Styled.Attributes.style "color" "#ccc" ] [ Html.Styled.text (" " ++ symbol) ]
 
 
 simpleRowAttrs : data -> List (Html.Styled.Attribute msg)

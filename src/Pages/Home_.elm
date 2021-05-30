@@ -3,22 +3,19 @@ module Pages.Home_ exposing (Model, Msg, page)
 import Browser.Dom exposing (Element)
 import Decode.ByKategorie exposing (KategorieTupel, rootDecoder)
 import Decode.Spiel exposing (Spiel)
-import Decode.SpringDataRestSpiel exposing (..)
 import Gen.Params.Home_ exposing (Params)
-import Html.Attributes exposing (size)
-import Html.Styled exposing (button, div, fromUnstyled, optgroup, option, select, span, text, toUnstyled)
-import Html.Styled.Attributes exposing (css)
+import Html.Attributes
+import Html.Styled exposing (button, div, text)
+import Html.Styled.Attributes
 import Html.Styled.Events exposing (onClick)
 import Http
 import Input.Number
-import Json.Decode exposing (..)
 import MultiSelect exposing (multiSelect)
 import NaturalOrdering
 import Page
 import Request
 import Shared
 import Table
-import Tailwind.Utilities as Tw
 import Task exposing (Task)
 import View exposing (View)
 
@@ -179,11 +176,6 @@ multiselectOptions model =
     }
 
 
-style : String -> String -> Html.Styled.Attribute msg
-style key value =
-    Html.Styled.Attributes.attribute key value
-
-
 
 -- VIEW
 
@@ -200,60 +192,56 @@ view model =
                 , Html.Styled.Attributes.style "background-color" "white"
                 , Html.Styled.Attributes.style "width" "100%"
                 ]
-              <|
-                List.append
-                    (if model.showFilter then
-                        [ Html.Styled.div []
-                            [ Html.Styled.label []
-                                [ Html.Styled.text "Spieleranzahl"
-                                , Html.Styled.fromUnstyled <|
-                                    Input.Number.input { onInput = InputUpdated, maxLength = Nothing, maxValue = Just 20, minValue = Just 1, hasFocus = Just InputFocus }
-                                        []
-                                        model.spieleranzahl
-                                ]
-                            ]
-                        , Html.Styled.div []
-                            [ Html.Styled.label []
-                                [ Html.Styled.text "Kategorien"
-                                , Html.Styled.fromUnstyled <|
-                                    multiSelect
-                                        (multiselectOptions model)
-                                        [ Html.Attributes.style "width" "100%"
-                                        , Html.Attributes.style "height" "100%"
-                                        , Html.Attributes.size 12
-                                        ]
-                                        model.kategorieSelected
-                                ]
+                (if model.showFilter then
+                    [ Html.Styled.div []
+                        [ Html.Styled.label []
+                            [ Html.Styled.text "Spieleranzahl"
+                            , Html.Styled.fromUnstyled <|
+                                Input.Number.input { onInput = InputUpdated, maxLength = Nothing, maxValue = Just 20, minValue = Just 1, hasFocus = Just InputFocus }
+                                    []
+                                    model.spieleranzahl
                             ]
                         ]
-
-                     else
-                        [ Html.Styled.text "nicht gefiltert "
-                        ]
-                    )
-                    [ div
-                        [ Html.Styled.Attributes.attribute "background-color" "white"
-                        , css [ Tw.sticky, Tw.top_0 ]
-                        ]
-                        [ button
-                            [ onClick ButtonClicked
+                    , Html.Styled.div []
+                        [ Html.Styled.label []
+                            [ Html.Styled.text "Kategorien"
+                            , Html.Styled.fromUnstyled <|
+                                multiSelect
+                                    (multiselectOptions model)
+                                    [ Html.Attributes.style "width" "100%"
+                                    , Html.Attributes.style "height" "100%"
+                                    , Html.Attributes.size 12
+                                    ]
+                                    model.kategorieSelected
                             ]
-                            [ text "toggle filter" ]
                         ]
+                    , button
+                        [ onClick ButtonClicked
+                        ]
+                        [ text "toggle filter" ]
                     ]
+
+                 else
+                    [ div [] [ Html.Styled.text "nicht gefiltert " ]
+                    , button
+                        [ onClick ButtonClicked
+                        ]
+                        [ text "toggle filter" ]
+                    ]
+                )
             , let
-                { tableState, spieleRequest } =
-                    model
+                table =
+                    case model.spieleRequest of
+                        ByKategorieFailure ->
+                            Html.Styled.text "fehler"
+
+                        ByKategorieLoading ->
+                            Html.Styled.text "lade"
+
+                        ByKategorieSuccess list ->
+                            Table.view (tableConfig model.filterDivHeight) model.tableState <| flattenSpiele list model.kategorieSelected
               in
-              case spieleRequest of
-                ByKategorieFailure ->
-                    Html.Styled.text "fehler"
-
-                ByKategorieLoading ->
-                    Html.Styled.text "lade"
-
-                ByKategorieSuccess list ->
-                    Table.view (tableConfig model.filterDivHeight) tableState <| flattenSpiele list model.kategorieSelected
+              table
             ]
     }
 
@@ -261,18 +249,16 @@ view model =
 tableHead : Maybe Float -> List ( String, Table.Status, Html.Styled.Attribute msg ) -> Table.HtmlDetails msg
 tableHead height list =
     Table.HtmlDetails
-        [ Html.Styled.Attributes.attribute "position" "sticky"
-        , Html.Styled.Attributes.attribute "background-color" "white"
-
-        --, Html.Styled.Attributes.attribute
-        , Html.Styled.Attributes.attribute "top" <|
+        [ Html.Styled.Attributes.style "position" "sticky"
+        , Html.Styled.Attributes.style "background-color" "white"
+        , Html.Styled.Attributes.style "top" <|
             case height of
                 Just f ->
                     String.fromFloat f ++ "px"
 
                 Nothing ->
                     "0px"
-        , Html.Styled.Attributes.attribute "padding" "20px"
+        , Html.Styled.Attributes.style "padding" "20px"
         ]
     <|
         List.map
@@ -317,11 +303,11 @@ tableHead height list =
 
 
 styleDark =
-    Html.Styled.Attributes.attribute "color" "#555"
+    Html.Styled.Attributes.style "color" "#555"
 
 
 styleLight =
-    Html.Styled.Attributes.attribute "color" "#ccc"
+    Html.Styled.Attributes.style "color" "#ccc"
 
 
 darkGrey symbol =
@@ -340,7 +326,7 @@ tableConfig height =
 
         customizations =
             { defaultCustomizations
-                | tableAttrs = [ Html.Styled.Attributes.attribute "width" "100%" ]
+                | tableAttrs = [ Html.Styled.Attributes.style "width" "100%" ]
                 , thead = tableHead height
                 , caption = Just <| { attributes = [], children = [ Html.Styled.text "caption" ] }
             }
