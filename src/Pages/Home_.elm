@@ -1,13 +1,16 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
+import Browser.Dom exposing (Element)
 import Decode.ByKategorie exposing (KategorieTupel, rootDecoder)
 import Decode.Spiel exposing (Spiel)
 import Decode.SpringDataRestSpiel exposing (..)
 import Gen.Params.Home_ exposing (Params)
 import Html
 import Html.Attributes
-import Html.Styled exposing (div, fromUnstyled, optgroup, option, select, span, text, toUnstyled)
-import Html.Styled.Attributes as Attributes exposing (css)
+import Html.Events
+import Html.Styled exposing (button, div, fromUnstyled, optgroup, option, select, span, text, toUnstyled)
+import Html.Styled.Attributes as Attributes exposing (css, for)
+import Html.Styled.Events exposing (onClick)
 import Http
 import Input.Number
 import Json.Decode exposing (..)
@@ -18,6 +21,7 @@ import Request
 import Shared
 import Table
 import Tailwind.Utilities as Tw
+import Task exposing (Task)
 import View exposing (View)
 
 
@@ -36,6 +40,8 @@ type alias Model =
     , spieleRequest : RequestByKategorieState
     , kategorieSelected : List String
     , spieleranzahl : Maybe Int
+    , showFilter : Bool
+    , filterDivHeight : Maybe Float
     }
 
 
@@ -57,6 +63,8 @@ init =
       , spieleRequest = ByKategorieLoading
       , kategorieSelected = [ "Klassiker", "Builder", "Gamer's Games", "Familienspiele", "Würfelspiel", "Strategiespiele", "Knobelspiel", "Partyspiel", "Quiz", "Wirtschaftsspiele", "Kartenspiel", "2-Personen-Spiele" ]
       , spieleranzahl = Just 2
+      , showFilter = False
+      , filterDivHeight = Nothing
       }
     , Http.get
         { url = "http://192.168.178.24:8080/kategorie"
@@ -75,10 +83,19 @@ type Msg
     | MultiSelectChanged (List String)
     | InputUpdated (Maybe Int)
     | InputFocus Bool
+    | ButtonClicked
+    | GotFilterDiv (Result Browser.Dom.Error Element)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        noop =
+            ( model, Cmd.none )
+
+        recalculateFilterDivHeight =
+            Task.attempt GotFilterDiv (Browser.Dom.getElement theFilterDivId)
+    in
     case msg of
         SetTableState newState ->
             ( { model | tableState = newState }
@@ -88,7 +105,7 @@ update msg model =
         SpieleByKategorieReceived result ->
             case result of
                 Ok value ->
-                    ( { model | spieleRequest = ByKategorieSuccess value }, Cmd.none )
+                    ( { model | spieleRequest = ByKategorieSuccess value }, recalculateFilterDivHeight )
 
                 Err error ->
                     ( { model | spieleRequest = ByKategorieFailure }, Cmd.none )
@@ -113,6 +130,25 @@ update msg model =
                     Debug.log "inputfocus" bool
             in
             ( model, Cmd.none )
+
+        ButtonClicked ->
+            ( { model | showFilter = not model.showFilter }, recalculateFilterDivHeight )
+
+        GotFilterDiv result ->
+            case result of
+                Ok value ->
+                    let
+                        _ =
+                            Debug.log "element" value
+                    in
+                    ( { model | filterDivHeight = Just value.element.height }, Cmd.none )
+
+                Err error ->
+                    let
+                        _ =
+                            Debug.log "error" error
+                    in
+                    noop
 
 
 
@@ -158,13 +194,52 @@ view : Model -> View Msg
 view model =
     { title = "GetJson"
     , body =
-        [ Input.Number.input { onInput = InputUpdated, maxLength = Nothing, maxValue = Just 20, minValue = Just 1, hasFocus = Just InputFocus } [] model.spieleranzahl
-        , multiSelect (multiselectOptions model)
-            [ style "width" "100%"
-            , style "height" "100%"
-            , Html.Attributes.size 12
+        [ Html.div
+            [ Html.Attributes.id theFilterDivId
+            , Html.Attributes.style "position" "sticky"
+            , Html.Attributes.style "top" "0px"
+            , Html.Attributes.style "background-color" "white"
+            , Html.Attributes.style "width" "100%"
             ]
-            model.kategorieSelected
+          <|
+            List.append
+                (if model.showFilter then
+                    [ Html.div []
+                        [ Html.label []
+                            [ Html.text "Spieleranzahl"
+                            , Input.Number.input { onInput = InputUpdated, maxLength = Nothing, maxValue = Just 20, minValue = Just 1, hasFocus = Just InputFocus }
+                                []
+                                model.spieleranzahl
+                            ]
+                        ]
+                    , Html.div []
+                        [ Html.label []
+                            [ Html.text "Kategorien"
+                            , multiSelect (multiselectOptions model)
+                                [ style "width" "100%"
+                                , style "height" "100%"
+                                , Html.Attributes.size 12
+                                ]
+                                model.kategorieSelected
+                            ]
+                        ]
+                    ]
+
+                 else
+                    [ Html.text "nicht gefiltert "
+                    ]
+                )
+                [ toUnstyled <|
+                    div
+                        [ Attributes.style "background-color" "white"
+                        , css [ Tw.sticky, Tw.top_0 ]
+                        ]
+                        [ button
+                            [ onClick ButtonClicked
+                            ]
+                            [ text "toggle filter" ]
+                        ]
+                ]
         , let
             { tableState, spieleRequest } =
                 model
@@ -177,22 +252,30 @@ view model =
                 Html.text "lade"
 
             ByKategorieSuccess list ->
-                Table.view tableConfig tableState <| flattenSpiele list model.kategorieSelected
+                Table.view (tableConfig model.filterDivHeight) tableState <| flattenSpiele list model.kategorieSelected
         ]
     }
 
 
-tableHead : List ( String, Table.Status, Html.Attribute msg ) -> Table.HtmlDetails msg
-tableHead list =
-    Table.HtmlDetails [] <|
+tableHead : Maybe Float -> List ( String, Table.Status, Html.Attribute msg ) -> Table.HtmlDetails msg
+tableHead height list =
+    Table.HtmlDetails
+        [ Html.Attributes.style "position" "sticky"
+        , Html.Attributes.style "background-color" "white"
+        , Html.Attributes.style "top" <|
+            case height of
+                Just f ->
+                    String.fromFloat f ++ "px"
+
+                Nothing ->
+                    "0px"
+        , Html.Attributes.style "padding" "20px"
+        ]
+    <|
         List.map
             (\( name, status, attributes ) ->
                 Html.th
                     [ attributes
-                    , Html.Attributes.style "position" "sticky"
-                    , Html.Attributes.style "background-color" "white"
-                    , Html.Attributes.style "top" "0px"
-                    , Html.Attributes.style "padding" "20px"
                     ]
                 <|
                     case status of
@@ -246,8 +329,7 @@ lightGrey symbol =
     Html.span [ styleLight ] [ Html.text (" " ++ symbol) ]
 
 
-tableConfig : Table.Config Spiel Msg
-tableConfig =
+tableConfig height =
     let
         defaultCustomizations : Table.Customizations data msg
         defaultCustomizations =
@@ -256,7 +338,8 @@ tableConfig =
         customizations =
             { defaultCustomizations
                 | tableAttrs = [ Html.Attributes.style "width" "100%" ]
-                , thead = tableHead
+                , thead = tableHead height
+                , caption = Just <| { attributes = [], children = [ Html.text "caption" ] }
             }
 
         columnErscheinungsjahr =
@@ -349,7 +432,8 @@ tableConfig =
             , Table.customColumn { name = "Spielminuten", viewData = spieldauer, sorter = incOrDecNaturalSortOn spieldauer }
             , Table.stringColumn "Spieler" spieleranzahl
             , Table.customColumn { name = "Alter", viewData = alter, sorter = incOrDecNaturalSortOn alter }
-            , Table.stringColumn "Kategorie" kategorie
+
+            --, Table.stringColumn "Kategorie" kategorie
             ]
         , customizations = customizations
         }
@@ -367,3 +451,7 @@ flattenSpiele byKatgorie kategorieSelected =
                 []
     in
     List.concatMap getSpieleList byKatgorie
+
+
+theFilterDivId =
+    "the-filter-div"
