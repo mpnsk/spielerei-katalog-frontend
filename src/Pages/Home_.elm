@@ -5,11 +5,9 @@ import Decode.ByKategorie exposing (KategorieTupel, rootDecoder)
 import Decode.Spiel exposing (Spiel)
 import Decode.SpringDataRestSpiel exposing (..)
 import Gen.Params.Home_ exposing (Params)
-import Html
-import Html.Attributes
-import Html.Events
+import Html.Attributes exposing (size)
 import Html.Styled exposing (button, div, fromUnstyled, optgroup, option, select, span, text, toUnstyled)
-import Html.Styled.Attributes as Attributes exposing (css, for)
+import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
 import Http
 import Input.Number
@@ -181,9 +179,9 @@ multiselectOptions model =
     }
 
 
-style : String -> String -> Html.Attribute msg
+style : String -> String -> Html.Styled.Attribute msg
 style key value =
-    Html.Attributes.style key value
+    Html.Styled.Attributes.attribute key value
 
 
 
@@ -194,44 +192,47 @@ view : Model -> View Msg
 view model =
     { title = "GetJson"
     , body =
-        [ Html.div
-            [ Html.Attributes.id theFilterDivId
-            , Html.Attributes.style "position" "sticky"
-            , Html.Attributes.style "top" "0px"
-            , Html.Attributes.style "background-color" "white"
-            , Html.Attributes.style "width" "100%"
-            ]
-          <|
-            List.append
-                (if model.showFilter then
-                    [ Html.div []
-                        [ Html.label []
-                            [ Html.text "Spieleranzahl"
-                            , Input.Number.input { onInput = InputUpdated, maxLength = Nothing, maxValue = Just 20, minValue = Just 1, hasFocus = Just InputFocus }
-                                []
-                                model.spieleranzahl
-                            ]
-                        ]
-                    , Html.div []
-                        [ Html.label []
-                            [ Html.text "Kategorien"
-                            , multiSelect (multiselectOptions model)
-                                [ style "width" "100%"
-                                , style "height" "100%"
-                                , Html.Attributes.size 12
+        List.map (\x -> Html.Styled.toUnstyled x)
+            [ Html.Styled.div
+                [ Html.Styled.Attributes.id theFilterDivId
+                , Html.Styled.Attributes.style "position" "sticky"
+                , Html.Styled.Attributes.style "top" "0px"
+                , Html.Styled.Attributes.style "background-color" "white"
+                , Html.Styled.Attributes.style "width" "100%"
+                ]
+              <|
+                List.append
+                    (if model.showFilter then
+                        [ Html.Styled.div []
+                            [ Html.Styled.label []
+                                [ Html.Styled.text "Spieleranzahl"
+                                , Html.Styled.fromUnstyled <|
+                                    Input.Number.input { onInput = InputUpdated, maxLength = Nothing, maxValue = Just 20, minValue = Just 1, hasFocus = Just InputFocus }
+                                        []
+                                        model.spieleranzahl
                                 ]
-                                model.kategorieSelected
+                            ]
+                        , Html.Styled.div []
+                            [ Html.Styled.label []
+                                [ Html.Styled.text "Kategorien"
+                                , Html.Styled.fromUnstyled <|
+                                    multiSelect
+                                        (multiselectOptions model)
+                                        [ Html.Attributes.style "width" "100%"
+                                        , Html.Attributes.style "height" "100%"
+                                        , Html.Attributes.size 12
+                                        ]
+                                        model.kategorieSelected
+                                ]
                             ]
                         ]
-                    ]
 
-                 else
-                    [ Html.text "nicht gefiltert "
-                    ]
-                )
-                [ toUnstyled <|
-                    div
-                        [ Attributes.style "background-color" "white"
+                     else
+                        [ Html.Styled.text "nicht gefiltert "
+                        ]
+                    )
+                    [ div
+                        [ Html.Styled.Attributes.attribute "background-color" "white"
                         , css [ Tw.sticky, Tw.top_0 ]
                         ]
                         [ button
@@ -239,51 +240,53 @@ view model =
                             ]
                             [ text "toggle filter" ]
                         ]
-                ]
-        , let
-            { tableState, spieleRequest } =
-                model
-          in
-          case spieleRequest of
-            ByKategorieFailure ->
-                Html.text "fehler"
+                    ]
+            , let
+                { tableState, spieleRequest } =
+                    model
+              in
+              case spieleRequest of
+                ByKategorieFailure ->
+                    Html.Styled.text "fehler"
 
-            ByKategorieLoading ->
-                Html.text "lade"
+                ByKategorieLoading ->
+                    Html.Styled.text "lade"
 
-            ByKategorieSuccess list ->
-                Table.view (tableConfig model.filterDivHeight) tableState <| flattenSpiele list model.kategorieSelected
-        ]
+                ByKategorieSuccess list ->
+                    Table.view (tableConfig model.filterDivHeight) tableState <| flattenSpiele list model.kategorieSelected
+            ]
     }
 
 
-tableHead : Maybe Float -> List ( String, Table.Status, Html.Attribute msg ) -> Table.HtmlDetails msg
+tableHead : Maybe Float -> List ( String, Table.Status, Html.Styled.Attribute msg ) -> Table.HtmlDetails msg
 tableHead height list =
     Table.HtmlDetails
-        [ Html.Attributes.style "position" "sticky"
-        , Html.Attributes.style "background-color" "white"
-        , Html.Attributes.style "top" <|
+        [ Html.Styled.Attributes.attribute "position" "sticky"
+        , Html.Styled.Attributes.attribute "background-color" "white"
+
+        --, Html.Styled.Attributes.attribute
+        , Html.Styled.Attributes.attribute "top" <|
             case height of
                 Just f ->
                     String.fromFloat f ++ "px"
 
                 Nothing ->
                     "0px"
-        , Html.Attributes.style "padding" "20px"
+        , Html.Styled.Attributes.attribute "padding" "20px"
         ]
     <|
         List.map
             (\( name, status, attributes ) ->
-                Html.th
+                Html.Styled.th
                     [ attributes
                     ]
                 <|
                     case status of
                         Table.Unsortable ->
-                            [ Html.text name ]
+                            [ Html.Styled.text name ]
 
                         Table.Sortable bool ->
-                            [ Html.text name
+                            [ Html.Styled.text name
                             , if bool then
                                 darkGrey "↓"
 
@@ -293,40 +296,40 @@ tableHead height list =
 
                         Table.Reversible (Just descending) ->
                             if descending then
-                                [ Html.text name
-                                , Html.span [ styleLight ] [ Html.text "↑" ]
-                                , Html.span [ styleDark ] [ Html.text "↓" ]
+                                [ Html.Styled.text name
+                                , Html.Styled.span [ styleLight ] [ Html.Styled.text "↑" ]
+                                , Html.Styled.span [ styleDark ] [ Html.Styled.text "↓" ]
                                 ]
 
                             else
-                                [ Html.text name
-                                , Html.span [ styleDark ] [ Html.text "↑" ]
-                                , Html.span [ styleLight ] [ Html.text "↓" ]
+                                [ Html.Styled.text name
+                                , Html.Styled.span [ styleDark ] [ Html.Styled.text "↑" ]
+                                , Html.Styled.span [ styleLight ] [ Html.Styled.text "↓" ]
                                 ]
 
                         Table.Reversible Nothing ->
-                            [ Html.text name
-                            , Html.span [ styleLight ] [ Html.text "↑" ]
-                            , Html.span [ styleLight ] [ Html.text "↓" ]
+                            [ Html.Styled.text name
+                            , Html.Styled.span [ styleLight ] [ Html.Styled.text "↑" ]
+                            , Html.Styled.span [ styleLight ] [ Html.Styled.text "↓" ]
                             ]
             )
             list
 
 
 styleDark =
-    Html.Attributes.style "color" "#555"
+    Html.Styled.Attributes.attribute "color" "#555"
 
 
 styleLight =
-    Html.Attributes.style "color" "#ccc"
+    Html.Styled.Attributes.attribute "color" "#ccc"
 
 
 darkGrey symbol =
-    Html.span [ styleDark ] [ Html.text (" " ++ symbol) ]
+    Html.Styled.span [ styleDark ] [ Html.Styled.text (" " ++ symbol) ]
 
 
 lightGrey symbol =
-    Html.span [ styleLight ] [ Html.text (" " ++ symbol) ]
+    Html.Styled.span [ styleLight ] [ Html.Styled.text (" " ++ symbol) ]
 
 
 tableConfig height =
@@ -337,9 +340,9 @@ tableConfig height =
 
         customizations =
             { defaultCustomizations
-                | tableAttrs = [ Html.Attributes.style "width" "100%" ]
+                | tableAttrs = [ Html.Styled.Attributes.attribute "width" "100%" ]
                 , thead = tableHead height
-                , caption = Just <| { attributes = [], children = [ Html.text "caption" ] }
+                , caption = Just <| { attributes = [], children = [ Html.Styled.text "caption" ] }
             }
 
         columnErscheinungsjahr =

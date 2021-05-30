@@ -57,11 +57,11 @@ is not that crazy.
 
 -}
 
-import Html exposing (Attribute, Html)
-import Html.Attributes as Attr
-import Html.Events as E
-import Html.Keyed as Keyed
-import Html.Lazy exposing (lazy2, lazy3)
+import Html.Styled
+import Html.Styled.Attributes
+import Html.Styled.Events
+import Html.Styled.Keyed
+import Html.Styled.Lazy
 import Json.Decode as Json
 
 
@@ -188,12 +188,12 @@ you have. Stories make it possible to design better!
 
 -}
 type alias Customizations data msg =
-    { tableAttrs : List (Attribute msg)
+    { tableAttrs : List (Html.Styled.Attribute msg)
     , caption : Maybe (HtmlDetails msg)
-    , thead : List ( String, Status, Attribute msg ) -> HtmlDetails msg
+    , thead : List ( String, Status, Html.Styled.Attribute msg ) -> HtmlDetails msg
     , tfoot : Maybe (HtmlDetails msg)
-    , tbodyAttrs : List (Attribute msg)
-    , rowAttrs : data -> List (Attribute msg)
+    , tbodyAttrs : List (Html.Styled.Attribute msg)
+    , rowAttrs : data -> List (Html.Styled.Attribute msg)
     }
 
 
@@ -202,8 +202,8 @@ to you. This type lets you specify all the details of an HTML node except the
 tag name.
 -}
 type alias HtmlDetails msg =
-    { attributes : List (Attribute msg)
-    , children : List (Html msg)
+    { attributes : List (Html.Styled.Attribute msg)
+    , children : List (Html.Styled.Html msg)
     }
 
 
@@ -220,21 +220,21 @@ defaultCustomizations =
     }
 
 
-simpleThead : List ( String, Status, Attribute msg ) -> HtmlDetails msg
+simpleThead : List ( String, Status, Html.Styled.Attribute msg ) -> HtmlDetails msg
 simpleThead headers =
     HtmlDetails [] (List.map simpleTheadHelp headers)
 
 
-simpleTheadHelp : ( String, Status, Attribute msg ) -> Html msg
+simpleTheadHelp : ( String, Status, Html.Styled.Attribute msg ) -> Html.Styled.Html msg
 simpleTheadHelp ( name, status, onClick_ ) =
     let
         content =
             case status of
                 Unsortable ->
-                    [ Html.text name ]
+                    [ Html.Styled.text name ]
 
                 Sortable selected ->
-                    [ Html.text name
+                    [ Html.Styled.text name
                     , if selected then
                         darkGrey "↓"
 
@@ -243,12 +243,12 @@ simpleTheadHelp ( name, status, onClick_ ) =
                     ]
 
                 Reversible Nothing ->
-                    [ Html.text name
+                    [ Html.Styled.text name
                     , lightGrey "↕"
                     ]
 
                 Reversible (Just isReversed) ->
-                    [ Html.text name
+                    [ Html.Styled.text name
                     , darkGrey
                         (if isReversed then
                             "↑"
@@ -258,20 +258,20 @@ simpleTheadHelp ( name, status, onClick_ ) =
                         )
                     ]
     in
-    Html.th [ onClick_ ] content
+    Html.Styled.th [ onClick_ ] content
 
 
-darkGrey : String -> Html msg
+darkGrey : String -> Html.Styled.Html msg
 darkGrey symbol =
-    Html.span [ Attr.style "color" "#555" ] [ Html.text (" " ++ symbol) ]
+    Html.Styled.span [ Html.Styled.Attributes.attribute "color" "#555" ] [ Html.Styled.text (" " ++ symbol) ]
 
 
-lightGrey : String -> Html msg
+lightGrey : String -> Html.Styled.Html msg
 lightGrey symbol =
-    Html.span [ Attr.style "color" "#ccc" ] [ Html.text (" " ++ symbol) ]
+    Html.Styled.span [ Html.Styled.Attributes.attribute "color" "#ccc" ] [ Html.Styled.text (" " ++ symbol) ]
 
 
-simpleRowAttrs : data -> List (Attribute msg)
+simpleRowAttrs : data -> List (Html.Styled.Attribute msg)
 simpleRowAttrs _ =
     []
 
@@ -347,7 +347,7 @@ floatColumn name toFloat =
 
 textDetails : String -> HtmlDetails msg
 textDetails str =
-    HtmlDetails [] [ Html.text str ]
+    HtmlDetails [] [ Html.Styled.text str ]
 
 
 {-| Perhaps the basic columns are not quite what you want. Maybe you want to
@@ -437,7 +437,7 @@ statically, and look for a different library if you need something crazier than
 that.
 
 -}
-view : Config data msg -> State -> List data -> Html msg
+view : Config data msg -> State -> List data -> Html.Styled.Html msg
 view (Config { toId, toMsg, columns, customizations }) state data =
     let
         sortedData =
@@ -447,10 +447,10 @@ view (Config { toId, toMsg, columns, customizations }) state data =
             customizations.thead (List.map (toHeaderInfo state toMsg) columns)
 
         thead =
-            Html.thead theadDetails.attributes theadDetails.children
+            Html.Styled.thead theadDetails.attributes theadDetails.children
 
         tbody =
-            Keyed.node "tbody" customizations.tbodyAttrs <|
+            Html.Styled.Keyed.node "tbody" customizations.tbodyAttrs <|
                 List.map (viewRow toId columns customizations.rowAttrs) sortedData
 
         withFoot =
@@ -459,18 +459,18 @@ view (Config { toId, toMsg, columns, customizations }) state data =
                     tbody :: []
 
                 Just { attributes, children } ->
-                    Html.tfoot attributes children :: tbody :: []
+                    Html.Styled.tfoot attributes children :: tbody :: []
     in
-    Html.table customizations.tableAttrs <|
+    Html.Styled.table customizations.tableAttrs <|
         case customizations.caption of
             Nothing ->
                 thead :: withFoot
 
             Just { attributes, children } ->
-                Html.caption attributes children :: thead :: withFoot
+                Html.Styled.caption attributes children :: thead :: withFoot
 
 
-toHeaderInfo : State -> (State -> msg) -> ColumnData data msg -> ( String, Status, Attribute msg )
+toHeaderInfo : State -> (State -> msg) -> ColumnData data msg -> ( String, Status, Html.Styled.Attribute msg )
 toHeaderInfo (State sortName isReversed) toMsg { name, sorter } =
     case sorter of
         None ->
@@ -497,32 +497,32 @@ toHeaderInfo (State sortName isReversed) toMsg { name, sorter } =
                 ( name, Reversible Nothing, onClick name False toMsg )
 
 
-onClick : String -> Bool -> (State -> msg) -> Attribute msg
+onClick : String -> Bool -> (State -> msg) -> Html.Styled.Attribute msg
 onClick name isReversed toMsg =
-    E.on "click" <|
+    Html.Styled.Events.on "click" <|
         Json.map toMsg <|
             Json.map2 State (Json.succeed name) (Json.succeed isReversed)
 
 
-viewRow : (data -> String) -> List (ColumnData data msg) -> (data -> List (Attribute msg)) -> data -> ( String, Html msg )
+viewRow : (data -> String) -> List (ColumnData data msg) -> (data -> List (Html.Styled.Attribute msg)) -> data -> ( String, Html.Styled.Html msg )
 viewRow toId columns toRowAttrs data =
     ( toId data
-    , lazy3 viewRowHelp columns toRowAttrs data
+    , Html.Styled.Lazy.lazy3 viewRowHelp columns toRowAttrs data
     )
 
 
-viewRowHelp : List (ColumnData data msg) -> (data -> List (Attribute msg)) -> data -> Html msg
+viewRowHelp : List (ColumnData data msg) -> (data -> List (Html.Styled.Attribute msg)) -> data -> Html.Styled.Html msg
 viewRowHelp columns toRowAttrs data =
-    Html.tr (toRowAttrs data) (List.map (viewCell data) columns)
+    Html.Styled.tr (toRowAttrs data) (List.map (viewCell data) columns)
 
 
-viewCell : data -> ColumnData data msg -> Html msg
+viewCell : data -> ColumnData data msg -> Html.Styled.Html msg
 viewCell data { viewData } =
     let
         details =
             viewData data
     in
-    Html.td details.attributes details.children
+    Html.Styled.td details.attributes details.children
 
 
 
