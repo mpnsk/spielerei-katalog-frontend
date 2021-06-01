@@ -264,15 +264,7 @@ view model =
 tableHead : Maybe Float -> List ( String, Table.Status, Html.Styled.Attribute msg ) -> Table.HtmlDetails msg
 tableHead height list =
     Table.HtmlDetails
-        [ Html.Styled.Attributes.style "position" "sticky"
-        , Html.Styled.Attributes.style "background-color" "white"
-        , Html.Styled.Attributes.style "top" <|
-            case height of
-                Just f ->
-                    String.fromFloat f ++ "px"
-
-                Nothing ->
-                    "0px"
+        [ Html.Styled.Attributes.style "background-color" "white"
         , Html.Styled.Attributes.style "padding" "20px"
         ]
     <|
@@ -280,7 +272,16 @@ tableHead height list =
             (\( name, status, attributes ) ->
                 Html.Styled.th
                     [ attributes
-                    , css [ Tw.bg_gray_200, Tw.text_gray_600, Tw.border, Tw.border_gray_300, Tw.hidden, Breakpoints.lg [ Tw.table_cell ] ]
+                    , css <|
+                        List.append
+                            [ Tw.bg_gray_200, Tw.text_gray_600, Tw.border, Tw.border_gray_300, Tw.hidden, Breakpoints.lg [ Tw.table_cell ] ]
+                        <|
+                            case height of
+                                Just h ->
+                                    [ Tw.sticky, Css.top <| Css.px h ]
+
+                                Nothing ->
+                                    []
                     ]
                 <|
                     case status of
@@ -432,7 +433,7 @@ tableConfig height =
         spielToHtml : String -> (Spiel -> String) -> Spiel -> Table.HtmlDetails msg
         spielToHtml columnName spielToString spiel =
             Table.HtmlDetails
-                [ css
+                [ css <|
                     [ Breakpoints.lg [ Tw.w_auto, Tw.table_cell, Tw.static ]
                     , Tw.w_full
                     , Tw.p_3
