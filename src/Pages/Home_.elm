@@ -1,12 +1,13 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
 import Browser.Dom exposing (Element)
+import Css
 import Decode.ByKategorie exposing (KategorieTupel, rootDecoder)
 import Decode.Spiel exposing (Spiel)
 import Gen.Params.Home_ exposing (Params)
 import Html.Attributes
-import Html.Styled exposing (button, div, text)
-import Html.Styled.Attributes
+import Html.Styled exposing (button, div, span, text)
+import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
 import Http
 import Input.Number
@@ -16,6 +17,8 @@ import Page
 import Request
 import Shared
 import Table
+import Tailwind.Breakpoints as Breakpoints
+import Tailwind.Utilities as Tw
 import Task exposing (Task)
 import View exposing (View)
 
@@ -37,6 +40,7 @@ type alias Model =
     , spieleranzahl : Maybe Int
     , showFilter : Bool
     , filterDivHeight : Maybe Float
+    , filterDivDelta : Maybe Float
     }
 
 
@@ -60,6 +64,7 @@ init =
       , spieleranzahl = Just 2
       , showFilter = False
       , filterDivHeight = Nothing
+      , filterDivDelta = Nothing
       }
     , Http.get
         { url = "http://192.168.178.24:8080/kategorie"
@@ -135,8 +140,11 @@ update msg model =
                     let
                         _ =
                             Debug.log "element" value
+
+                        delta =
+                            Debug.log "delta" (value.element.height + value.element.x + value.element.x)
                     in
-                    ( { model | filterDivHeight = Just value.element.height }, Cmd.none )
+                    ( { model | filterDivHeight = Just (value.element.height + value.element.x), filterDivDelta = Just value.element.x }, Cmd.none )
 
                 Err error ->
                     let
@@ -188,7 +196,14 @@ view model =
             [ Html.Styled.div
                 [ Html.Styled.Attributes.id theFilterDivId
                 , Html.Styled.Attributes.style "position" "sticky"
-                , Html.Styled.Attributes.style "top" "0px"
+                , Html.Styled.Attributes.style "top"
+                    (case model.filterDivDelta of
+                        Just f ->
+                            (f |> String.fromFloat) ++ "px"
+
+                        Nothing ->
+                            "0px"
+                    )
                 , Html.Styled.Attributes.style "background-color" "white"
                 , Html.Styled.Attributes.style "width" "100%"
                 ]
@@ -209,7 +224,6 @@ view model =
                                 multiSelect
                                     (multiselectOptions model)
                                     [ Html.Attributes.style "width" "100%"
-                                    , Html.Attributes.style "height" "100%"
                                     , Html.Attributes.size 12
                                     ]
                                     model.kategorieSelected
@@ -265,6 +279,7 @@ tableHead height list =
             (\( name, status, attributes ) ->
                 Html.Styled.th
                     [ attributes
+                    , css [ Tw.bg_gray_200, Tw.text_gray_600, Tw.border, Tw.border_gray_300, Tw.hidden, Breakpoints.lg [ Tw.table_cell ] ]
                     ]
                 <|
                     case status of
@@ -328,7 +343,9 @@ tableConfig height =
             { defaultCustomizations
                 | tableAttrs = [ Html.Styled.Attributes.style "width" "100%" ]
                 , thead = tableHead height
-                , caption = Just <| { attributes = [], children = [ Html.Styled.text "caption" ] }
+
+                --, caption = Just <| { attributes = [], children = [ Html.Styled.text "caption" ] }
+                , rowAttrs = \spiel -> [ css [ Breakpoints.lg [ Tw.table_row, Tw.flex_row, Tw.flex_nowrap, Tw.mb_0 ], Tw.flex, Tw.flex_row, Tw.flex_wrap, Tw.mb_10 ] ]
             }
 
         columnErscheinungsjahr =
@@ -337,8 +354,8 @@ tableConfig height =
                     let
                         jahr =
                             case data.erscheinungsjahr of
-                                Just x ->
-                                    x
+                                Just j ->
+                                    j
 
                                 Nothing ->
                                     ""
@@ -410,17 +427,40 @@ tableConfig height =
 
             else
                 String.fromInt spiel.altersempfehlung ++ "-" ++ String.fromInt spiel.altersempfehlungMax
+
+        spielToHtml : String -> (Spiel -> String) -> Spiel -> Table.HtmlDetails msg
+        spielToHtml columnName spielToString spiel =
+            Table.HtmlDetails
+                [ css
+                    [ Breakpoints.lg [ Tw.w_auto, Tw.table_cell, Tw.static ]
+                    , Tw.w_full
+                    , Tw.p_3
+                    , Tw.text_gray_800
+                    , Tw.text_center
+                    , Tw.border
+                    , Tw.border_b
+                    , Tw.block
+                    , Tw.relative
+                    ]
+                ]
+                [ span [ css [ Breakpoints.lg [ Tw.hidden ], Tw.absolute, Tw.top_0, Tw.left_0, Tw.bg_blue_200, Tw.px_2, Tw.py_1, Tw.text_xs, Tw.font_bold ] ] [ text columnName ], text (spielToString spiel) ]
     in
     Table.customConfig
         { toId = \data -> String.fromInt data.id
         , toMsg = SetTableState
         , columns =
-            [ Table.customColumn { name = "Name", viewData = .name, sorter = incOrDecNaturalSortOn .name }
+            [ --Table.customColumn { name = "Name", viewData = .name, sorter = incOrDecNaturalSortOn .name }
+              Table.veryCustomColumn { name = "Titel", viewData = spielToHtml "Titel" .name, sorter = incOrDecNaturalSortOn .name }
 
             --, Table.stringColumn "Spieldauer" spieldauer
-            , Table.customColumn { name = "Spielminuten", viewData = spieldauer, sorter = incOrDecNaturalSortOn spieldauer }
-            , Table.stringColumn "Spieler" spieleranzahl
-            , Table.customColumn { name = "Alter", viewData = alter, sorter = incOrDecNaturalSortOn alter }
+            --, Table.customColumn { name = "Spielminuten", viewData = spieldauer, sorter = incOrDecNaturalSortOn spieldauer }
+            , Table.veryCustomColumn { name = "Spielminuten", viewData = spielToHtml "Spielminuten" spieldauer, sorter = incOrDecNaturalSortOn spieldauer }
+
+            --, Table.stringColumn "Spieler" spieleranzahl
+            , Table.veryCustomColumn { name = "Spieler", viewData = spielToHtml "Spieler" spieleranzahl, sorter = incOrDecNaturalSortOn spieleranzahl }
+
+            --, Table.customColumn { name = "Alter", viewData = alter, sorter = incOrDecNaturalSortOn alter }
+            , Table.veryCustomColumn { name = "Alter", viewData = spielToHtml "Alter" alter, sorter = incOrDecNaturalSortOn alter }
 
             --, Table.stringColumn "Kategorie" kategorie
             ]
