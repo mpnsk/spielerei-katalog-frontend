@@ -460,14 +460,22 @@ view (Config { toId, toMsg, columns, customizations }) state data =
 
                 Just { attributes, children } ->
                     Html.Styled.tfoot attributes children :: tbody :: []
+
+        withColgroup =
+            Html.Styled.colgroup []
+                [ Html.Styled.col [ Html.Styled.Attributes.style "width" "25%" ] []
+                , Html.Styled.col [ Html.Styled.Attributes.style "width" "25%" ] []
+                , Html.Styled.col [ Html.Styled.Attributes.style "width" "25%" ] []
+                , Html.Styled.col [ Html.Styled.Attributes.style "width" "25%" ] []
+                ]
     in
     Html.Styled.table customizations.tableAttrs <|
         case customizations.caption of
             Nothing ->
-                thead :: withFoot
+                withColgroup :: thead :: withFoot
 
             Just { attributes, children } ->
-                Html.Styled.caption attributes children :: thead :: withFoot
+                withColgroup :: Html.Styled.caption attributes children :: thead :: withFoot
 
 
 toHeaderInfo : State -> (State -> msg) -> ColumnData data msg -> ( String, Status, Html.Styled.Attribute msg )
