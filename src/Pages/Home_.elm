@@ -144,7 +144,7 @@ update msg model =
                         delta =
                             Debug.log "delta" (value.element.height + value.element.x + value.element.x)
                     in
-                    ( { model | filterDivHeight = Just (value.element.height + value.element.x), filterDivDelta = Just value.element.x }, Cmd.none )
+                    ( { model | filterDivHeight = Just value.element.height, filterDivDelta = Just 0 }, Cmd.none )
 
                 Err error ->
                     let
@@ -206,6 +206,7 @@ view model =
                     )
                 , Html.Styled.Attributes.style "background-color" "white"
                 , Html.Styled.Attributes.style "width" "100%"
+                , Html.Styled.Attributes.style "z-index" "10"
                 ]
                 (if model.showFilter then
                     [ Html.Styled.div []

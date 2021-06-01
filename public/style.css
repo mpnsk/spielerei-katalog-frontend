@@ -11,3 +11,9 @@
 .navbar a {
     margin-right: 16px;
 }
+body {
+    margin-top: 0;
+}
+table {
+    border-spacing: 0;
+}
