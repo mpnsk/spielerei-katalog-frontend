@@ -1,6 +1,7 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
 import Browser.Dom exposing (Element)
+import Browser.Events
 import Css
 import Decode.ByKategorie exposing (KategorieTupel, rootDecoder)
 import Decode.Spiel exposing (Spiel)
@@ -41,6 +42,7 @@ type alias Model =
     , showFilter : Bool
     , filterDivHeight : Maybe Float
     , filterDivDelta : Maybe Float
+    , screenSize : ScreenSize
     }
 
 
@@ -48,6 +50,28 @@ type RequestByKategorieState
     = ByKategorieFailure
     | ByKategorieLoading
     | ByKategorieSuccess (List KategorieTupel)
+
+
+type ScreenSize
+    = Phone
+    | Tablet
+    | Desktop
+    | BigDesktop
+
+
+getScreenSize : Int -> ScreenSize
+getScreenSize width =
+    if width <= 600 then
+        Phone
+
+    else if width <= 1200 then
+        Tablet
+
+    else if width <= 1800 then
+        Desktop
+
+    else
+        BigDesktop
 
 
 
@@ -65,6 +89,7 @@ init =
       , showFilter = False
       , filterDivHeight = Nothing
       , filterDivDelta = Nothing
+      , screenSize = Phone
       }
     , Http.get
         { url = "http://192.168.178.24:8080/kategorie"
@@ -85,6 +110,7 @@ type Msg
     | InputFocus Bool
     | ButtonClicked
     | GotFilterDiv (Result Browser.Dom.Error Element)
+    | GotNewWidth Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -111,24 +137,12 @@ update msg model =
                     ( { model | spieleRequest = ByKategorieFailure }, Cmd.none )
 
         MultiSelectChanged strings ->
-            let
-                _ =
-                    Debug.log "kategorien: " strings
-            in
             ( { model | kategorieSelected = strings }, Cmd.none )
 
         InputUpdated maybeInt ->
-            let
-                _ =
-                    Debug.log "inputupdated" maybeInt
-            in
             ( { model | spieleranzahl = maybeInt }, Cmd.none )
 
         InputFocus bool ->
-            let
-                _ =
-                    Debug.log "inputfocus" bool
-            in
             ( model, Cmd.none )
 
         ButtonClicked ->
@@ -138,20 +152,16 @@ update msg model =
             case result of
                 Ok value ->
                     let
-                        _ =
-                            Debug.log "element" value
-
                         delta =
-                            Debug.log "delta" (value.element.height + value.element.x + value.element.x)
+                            value.element.height + value.element.x + value.element.x
                     in
                     ( { model | filterDivHeight = Just value.element.height, filterDivDelta = Just 0 }, Cmd.none )
 
                 Err error ->
-                    let
-                        _ =
-                            Debug.log "error" error
-                    in
                     noop
+
+        GotNewWidth int ->
+            ( { model | screenSize = getScreenSize int }, Cmd.none )
 
 
 
@@ -160,7 +170,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Browser.Events.onResize (\w h -> GotNewWidth w)
 
 
 multiselectOptions : Model -> MultiSelect.Options Msg
