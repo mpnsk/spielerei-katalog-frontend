@@ -1,9 +1,15 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
+import Decode.SpringDataRestSpiel
 import Gen.Params.Home_ exposing (Params)
+import Html.Styled exposing (a, div, nav, p, span, text, toUnstyled)
+import Html.Styled.Attributes exposing (attribute, class, href)
+import Http
 import Page
 import Request
 import Shared
+import Svg.Styled exposing (svg)
+import Svg.Styled.Attributes exposing (fill)
 import View exposing (View)
 
 
@@ -25,9 +31,13 @@ type alias Model =
     {}
 
 
+initModel =
+    {}
+
+
 init : ( Model, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( initModel, Http.get { url = "http://localhost:8080/spiele", expect = Http.expectJson GotSpiele Decode.SpringDataRestSpiel.decodeSpieleCollection } )
 
 
 
@@ -36,12 +46,16 @@ init =
 
 type Msg
     = ReplaceMe
+    | GotSpiele (Result Http.Error Decode.SpringDataRestSpiel.SpieleCollection)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ReplaceMe ->
+            ( model, Cmd.none )
+
+        GotSpiele result ->
             ( model, Cmd.none )
 
 
