@@ -10,6 +10,7 @@ import Json.Decode
 type alias SpieleCollection =
     { embedded : Embedded
     , links : Links
+    , page : Page
     }
 
 
@@ -74,11 +75,29 @@ type alias LinksProfile =
     }
 
 
+type alias Page =
+    { number : Int
+    , size : Int
+    , totalElements : Int
+    , totalPages : Int
+    }
+
+
+pageDecoder : Json.Decode.Decoder Page
+pageDecoder =
+    Json.Decode.map4 Page
+        (Json.Decode.field "number" Json.Decode.int)
+        (Json.Decode.field "size" Json.Decode.int)
+        (Json.Decode.field "totalElements" Json.Decode.int)
+        (Json.Decode.field "totalPages" Json.Decode.int)
+
+
 decodeSpieleCollection : Json.Decode.Decoder SpieleCollection
 decodeSpieleCollection =
-    Json.Decode.map2 SpieleCollection
+    Json.Decode.map3 SpieleCollection
         (Json.Decode.field "_embedded" decodeEmbedded)
         (Json.Decode.field "_links" decodeLinks)
+        (Json.Decode.field "page" pageDecoder)
 
 
 decodeEmbedded : Json.Decode.Decoder Embedded
