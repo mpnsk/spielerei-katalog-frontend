@@ -1,7 +1,7 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
 import Css exposing (height, px, width)
-import Decode.SpringDataRestSpiel
+import Decode.SpringDataRestSpiel exposing (AttachmentsObjectPreviewObject)
 import Gen.Params.Home_ exposing (Params)
 import Html.Styled exposing (a, div, img, nav, p, span, text, toUnstyled)
 import Html.Styled.Attributes as Attr exposing (attribute, class, css, href, src, style)
@@ -112,7 +112,7 @@ view model =
                                         [ text spiel.name
                                         , case List.head spiel.attachments of
                                             Just attachment ->
-                                                case List.head attachment.preview of
+                                                case findFirstInPreviewListWithHeightBigger200 attachment.preview of
                                                     Just preview ->
                                                         img [ src ("http://192.168.178.24:8082/" ++ attachment.trelloId ++ "/" ++ String.fromInt preview.width ++ "x" ++ String.fromInt preview.height ++ "/" ++ preview.trelloId ++ "/" ++ attachment.name) ] []
 
@@ -129,3 +129,22 @@ view model =
                         divList
         ]
     }
+
+
+findFirstInPreviewListWithHeightBigger200 : List AttachmentsObjectPreviewObject -> Maybe AttachmentsObjectPreviewObject
+findFirstInPreviewListWithHeightBigger200 list =
+    case List.head list of
+        Just obj ->
+            if obj.width >= 220 then
+                Just obj
+
+            else
+                case List.tail list of
+                    Nothing ->
+                        Nothing
+
+                    Just tail ->
+                        findFirstInPreviewListWithHeightBigger200 tail
+
+        Nothing ->
+            Nothing
