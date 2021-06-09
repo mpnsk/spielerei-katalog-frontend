@@ -3,9 +3,10 @@ module Pages.Home_ exposing (Model, Msg, page)
 import Css exposing (height, px, width)
 import Decode.SpringDataRestSpiel
 import Gen.Params.Home_ exposing (Params)
-import Html.Styled exposing (a, div, nav, p, span, text, toUnstyled)
-import Html.Styled.Attributes as Attr exposing (attribute, class, css, href, style)
+import Html.Styled exposing (a, div, img, nav, p, span, text, toUnstyled)
+import Html.Styled.Attributes as Attr exposing (attribute, class, css, href, src, style)
 import Http
+import List
 import Page
 import Pagination exposing (rangePagination)
 import Request
@@ -40,7 +41,7 @@ initModel =
 
 init : ( Model, Cmd Msg )
 init =
-    ( initModel, Http.get { url = "http://localhost:8080/spiele", expect = Http.expectJson GotSpiele Decode.SpringDataRestSpiel.decodeSpieleCollection } )
+    ( initModel, Http.get { url = "http://localhost:8080/spiele?size=60", expect = Http.expectJson GotSpiele Decode.SpringDataRestSpiel.decodeSpieleCollection } )
 
 
 
@@ -96,40 +97,35 @@ view model =
                 Just a ->
                     let
                         style1 =
-                            [ Tw.bg_blue_200, Tw.m_1, Tw.inline_block, Tw.w_full ]
+                            [ Tw.bg_blue_200
+                            , Tw.m_1
+                            , Tw.inline_block
+                            , Tw.w_full
+
+                            --, height <| px 200
+                            ]
+
+                        divList =
+                            List.map
+                                (\spiel ->
+                                    div [ css <| List.append style1 [] ]
+                                        [ text spiel.name
+                                        , case List.head spiel.attachments of
+                                            Just attachment ->
+                                                case List.head attachment.preview of
+                                                    Just preview ->
+                                                        img [ src ("http://192.168.178.24:8082/" ++ attachment.trelloId ++ "/" ++ String.fromInt preview.width ++ "x" ++ String.fromInt preview.height ++ "/" ++ preview.trelloId ++ "/" ++ attachment.name) ] []
+
+                                                    Nothing ->
+                                                        text "kein preview"
+
+                                            Nothing ->
+                                                text "kein bild"
+                                        ]
+                                )
+                                a.embedded.spiele
                     in
-                    div [ style "columns" "6 200px", style "column-gap" "1rem", style "spacing" "20px" ]
-                        [ div [ css <| List.append style1 [ height <| px 200 ] ] [ text "1" ]
-                        , div [ css <| List.append style1 [ height <| px 220 ] ] [ text "2" ]
-                        , div [ css <| List.append style1 [ height <| px 220 ] ] [ text "3" ]
-                        , div [ css <| List.append style1 [ height <| px 220 ] ] [ text "4" ]
-                        , div [ css <| List.append style1 [ height <| px 220 ] ] [ text "5" ]
-                        , div [ css <| List.append style1 [ height <| px 220 ] ] [ text "6" ]
-                        , div [ css <| List.append style1 [ height <| px 250 ] ] [ text "7" ]
-                        , div [ css <| List.append style1 [ height <| px 280 ] ] [ text "8" ]
-                        , div [ css <| List.append style1 [ height <| px 270 ] ] [ text "9" ]
-                        , div [ css <| List.append style1 [ height <| px 210 ] ] [ text "1" ]
-                        , div [ css <| List.append style1 [ height <| px 250 ] ] [ text "2" ]
-                        , div [ css <| List.append style1 [ height <| px 280 ] ] [ text "3" ]
-                        , div [ css <| List.append style1 [ height <| px 270 ] ] [ text "4" ]
-                        , div [ css <| List.append style1 [ height <| px 210 ] ] [ text "5" ]
-                        , div [ css <| List.append style1 [ height <| px 220 ] ] [ text "6" ]
-                        , div [ css <| List.append style1 [ height <| px 250 ] ] [ text "7" ]
-                        , div [ css <| List.append style1 [ height <| px 280 ] ] [ text "8" ]
-                        , div [ css <| List.append style1 [ height <| px 270 ] ] [ text "9" ]
-                        , div [ css <| List.append style1 [ height <| px 210 ] ] [ text "1" ]
-                        , div [ css <| List.append style1 [ height <| px 250 ] ] [ text "2" ]
-                        , div [ css <| List.append style1 [ height <| px 280 ] ] [ text "3" ]
-                        , div [ css <| List.append style1 [ height <| px 270 ] ] [ text "4" ]
-                        , div [ css <| List.append style1 [ height <| px 210 ] ] [ text "5" ]
-                        , div [ css <| List.append style1 [ height <| px 250 ] ] [ text "6" ]
-                        , div [ css <| List.append style1 [ height <| px 280 ] ] [ text "7" ]
-                        , div [ css <| List.append style1 [ height <| px 270 ] ] [ text "8" ]
-                        , div [ css <| List.append style1 [ height <| px 210 ] ] [ text "9" ]
-                        , div [ css <| List.append style1 [ height <| px 250 ] ] [ text "1" ]
-                        , div [ css <| List.append style1 [ height <| px 280 ] ] [ text "2" ]
-                        , div [ css <| List.append style1 [ height <| px 270 ] ] [ text "3" ]
-                        , div [ css <| List.append style1 [ height <| px 210 ] ] [ text "4" ]
-                        ]
+                    div [ style "columns" "3 200px", style "column-gap" "1rem", style "spacing" "20px" ]
+                        divList
         ]
     }
