@@ -3,10 +3,12 @@ module Pages.Home_ exposing (Model, Msg, page)
 import Css exposing (height, px, width)
 import Decode.SpringDataRestSpiel exposing (AttachmentsObjectPreviewObject)
 import Gen.Params.Home_ exposing (Params)
-import Html.Styled exposing (a, div, img, nav, p, span, text, toUnstyled)
+import Html
+import Html.Styled exposing (a, div, fromUnstyled, img, nav, p, span, text, toUnstyled)
 import Html.Styled.Attributes as Attr exposing (attribute, class, css, href, src, style)
 import Http
 import List
+import Masonry
 import Page
 import Pagination exposing (rangePagination)
 import Request
@@ -114,7 +116,7 @@ view model =
                                             Just attachment ->
                                                 case findFirstInPreviewListWithHeightBigger200 attachment.preview of
                                                     Just preview ->
-                                                        img [ src ("http://192.168.178.24:8082/" ++ attachment.trelloId ++ "/" ++ String.fromInt preview.width ++ "x" ++ String.fromInt preview.height ++ "/" ++ preview.trelloId ++ "/" ++ attachment.name) ] []
+                                                        img [ src ("http://192.168.178.24:8081/" ++ attachment.trelloId ++ "/" ++ String.fromInt preview.width ++ "x" ++ String.fromInt preview.height ++ "/" ++ preview.trelloId ++ "/" ++ attachment.name) ] []
 
                                                     Nothing ->
                                                         text "kein preview"
@@ -124,9 +126,51 @@ view model =
                                         ]
                                 )
                                 a.embedded.spiele
+
+                        masonry =
+                            let
+                                config =
+                                    let
+                                        viewItem id ( index, embeddedSpieleObject ) =
+                                            let
+                                                h : Float
+                                                h =
+                                                    List.head embeddedSpieleObject.attachments
+                                                        |> Maybe.map (\att -> att.preview)
+                                                        |> Maybe.andThen List.head
+                                                        |> Maybe.map .height
+                                                        |> (\x ->
+                                                                case x of
+                                                                    Just i ->
+                                                                        i
+
+                                                                    Nothing ->
+                                                                        200
+                                                           )
+                                                        |> toFloat
+
+                                                --|> Maybe.map .height
+                                            in
+                                            toUnstyled <|
+                                                div [ css [ height <| px h ] ]
+                                                    --[ Html.text <| "index" ++ String.fromInt index
+                                                    --, Html.text " "
+                                                    [ text <| String.fromInt index ++ " " ++ embeddedSpieleObject.name
+                                                    ]
+                                    in
+                                    { toView = viewItem
+                                    , columns = 4
+                                    }
+                            in
+                            Masonry.view config <| Tuple.first <| (Masonry.init <| Just "masonry-id") <| List.indexedMap Tuple.pair a.embedded.spiele
                     in
-                    div [ style "columns" "3 200px", style "column-gap" "1rem", style "spacing" "20px" ]
-                        divList
+                    div []
+                        [ text "before masonry"
+                        , fromUnstyled masonry
+                        , text "after masonry"
+                        , div [ style "columns" "3 200px", style "column-gap" "1rem", style "spacing" "20px" ]
+                            divList
+                        ]
         ]
     }
 
