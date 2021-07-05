@@ -1,0 +1,350 @@
+{
+  "id" : 48,
+  "name" : "Mondo Sapiens",
+  "beschreibung" : "Mit Mondo Sapiens erscheint ein eigenständiges neues Legespiel, in dem  es nicht mehr nur um Tiere, sondern um Menschen, Tätigkeiten, Berufe und Straßen geht.Es kann als Fortsetzung zum \"klassischen\" Mondo gesehen werden und sowohl im Anschluss an dieses als auch eigenständig gespielt werden. ",
+  "spieldauerTyp" : "MinMax",
+  "spieldauerMinutenMin" : 20,
+  "spieldauerMinutenMax" : 30,
+  "erscheinugsjahr" : "2012",
+  "spieleranzahlMin" : 1,
+  "spieleranzahlMax" : 4,
+  "altersempfehlung" : 8,
+  "altersempfehlungMax" : 0,
+  "leihpreis" : 3,
+  "kategorie" : {
+    "id" : 14,
+    "name" : "Strategiespiele"
+  },
+  "coverBildId" : null,
+  "attachments" : [ {
+    "trelloId" : "59f4ac55efa1b3b9cd4cd17f",
+    "name" : "trello816722399.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4ac57934368bd60d0a6ca",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 4965,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c9",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 40187,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c8",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 6711,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c7",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 22810,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c6",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 73033,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c5",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 231074,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c4",
+      "height" : 3968,
+      "width" : 2976,
+      "bytes" : 3234443,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f4ac55efa1b3b9cd4cd17f",
+    "name" : "trello816722399.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4ac57934368bd60d0a6ca",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 4965,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c9",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 40187,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c8",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 6711,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c7",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 22810,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c6",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 73033,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c5",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 231074,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c4",
+      "height" : 3968,
+      "width" : 2976,
+      "bytes" : 3234443,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f4ac55efa1b3b9cd4cd17f",
+    "name" : "trello816722399.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4ac57934368bd60d0a6ca",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 4965,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c9",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 40187,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c8",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 6711,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c7",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 22810,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c6",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 73033,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c5",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 231074,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c4",
+      "height" : 3968,
+      "width" : 2976,
+      "bytes" : 3234443,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f4ac55efa1b3b9cd4cd17f",
+    "name" : "trello816722399.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4ac57934368bd60d0a6ca",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 4965,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c9",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 40187,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c8",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 6711,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c7",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 22810,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c6",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 73033,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c5",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 231074,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c4",
+      "height" : 3968,
+      "width" : 2976,
+      "bytes" : 3234443,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f4ac55efa1b3b9cd4cd17f",
+    "name" : "trello816722399.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4ac57934368bd60d0a6ca",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 4965,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c9",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 40187,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c8",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 6711,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c7",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 22810,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c6",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 73033,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c5",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 231074,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c4",
+      "height" : 3968,
+      "width" : 2976,
+      "bytes" : 3234443,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f4ac55efa1b3b9cd4cd17f",
+    "name" : "trello816722399.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4ac57934368bd60d0a6ca",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 4965,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c9",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 40187,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c8",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 6711,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c7",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 22810,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c6",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 73033,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c5",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 231074,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c4",
+      "height" : 3968,
+      "width" : 2976,
+      "bytes" : 3234443,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f4ac55efa1b3b9cd4cd17f",
+    "name" : "trello816722399.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4ac57934368bd60d0a6ca",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 4965,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c9",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 40187,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c8",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 6711,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c7",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 22810,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c6",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 73033,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c5",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 231074,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4ac57934368bd60d0a6c4",
+      "height" : 3968,
+      "width" : 2976,
+      "bytes" : 3234443,
+      "scaled" : true
+    } ]
+  } ],
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/spiele/48"
+    },
+    "spiel" : {
+      "href" : "http://localhost:8080/spiele/48"
+    }
+  }
+}

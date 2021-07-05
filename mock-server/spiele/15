@@ -1,0 +1,350 @@
+{
+  "id" : 15,
+  "name" : "Ticket to Ride (Zug um Zug) - Im Herzen Afrikas",
+  "beschreibung" : "Zug um Zug - Im Herzen Afrikas ist eine Erweiterung des traditionellen Zug um Zug. Es gibt ein zusätzliches Spielbrett mit Zugläufen auf dem afrikanischen Kontinent.\n",
+  "spieldauerTyp" : "MinMax",
+  "spieldauerMinutenMin" : 30,
+  "spieldauerMinutenMax" : 60,
+  "erscheinugsjahr" : null,
+  "spieleranzahlMin" : 2,
+  "spieleranzahlMax" : 5,
+  "altersempfehlung" : 8,
+  "altersempfehlungMax" : 0,
+  "leihpreis" : 2,
+  "kategorie" : {
+    "id" : 14,
+    "name" : "Strategiespiele"
+  },
+  "coverBildId" : null,
+  "attachments" : [ {
+    "trelloId" : "59f493927f3773308122b13b",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4939431ca8712b86cb33a",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5585,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb339",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 47821,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb338",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 10200,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb337",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 37580,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb336",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 127458,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb335",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 399863,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb334",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 3002613,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f493927f3773308122b13b",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4939431ca8712b86cb33a",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5585,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb339",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 47821,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb338",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 10200,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb337",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 37580,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb336",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 127458,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb335",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 399863,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb334",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 3002613,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f493927f3773308122b13b",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4939431ca8712b86cb33a",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5585,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb339",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 47821,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb338",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 10200,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb337",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 37580,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb336",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 127458,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb335",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 399863,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb334",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 3002613,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f493927f3773308122b13b",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4939431ca8712b86cb33a",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5585,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb339",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 47821,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb338",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 10200,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb337",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 37580,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb336",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 127458,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb335",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 399863,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb334",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 3002613,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f493927f3773308122b13b",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4939431ca8712b86cb33a",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5585,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb339",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 47821,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb338",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 10200,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb337",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 37580,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb336",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 127458,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb335",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 399863,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb334",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 3002613,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f493927f3773308122b13b",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4939431ca8712b86cb33a",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5585,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb339",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 47821,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb338",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 10200,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb337",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 37580,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb336",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 127458,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb335",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 399863,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb334",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 3002613,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f493927f3773308122b13b",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f4939431ca8712b86cb33a",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5585,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb339",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 47821,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb338",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 10200,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb337",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 37580,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb336",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 127458,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb335",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 399863,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f4939431ca8712b86cb334",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 3002613,
+      "scaled" : true
+    } ]
+  } ],
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/spiele/15"
+    },
+    "spiel" : {
+      "href" : "http://localhost:8080/spiele/15"
+    }
+  }
+}

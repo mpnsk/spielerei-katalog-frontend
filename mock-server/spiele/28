@@ -1,0 +1,350 @@
+{
+  "id" : 28,
+  "name" : "Yunnan",
+  "beschreibung" : "YUNNAN. Heimat des köstlichen Pu´er Tees. Seit über 1000 Jahren liefern die Tee-Dynastien mit ihren Pferdekarawanen die begehrte Ware bis ins entfernte Tibet. Durch die Urwälder Yunnans, über die Steppen von Sichuan bis über die Gipfel des Himalayas verläuft das Netz der Wege und Pfade der Tea-Horse Road, der traditionellen Reiseroute der Teehändler.\nIn YUNNAN leiten die Spieler die Geschicke ihrer Tee-Dynastie. Es gilt die Nase vorn zu haben und ein ebenso weites wie gesichertes Handelsnetz zu errichten, um die Ware bis in die fernsten Provinzen zu liefern. Schon im heimischen Pu´er stellen sich die Weichen für ein lukratives Geschäft: Neue Händler müssen ausgebildet, bessere Pferde beschafft und ausreichend Passierscheine für die Provinzgrenzen beantragt werden.\nDoch durch Handel allein schlägt man noch lange nicht die wachsame Konkurrenz aus dem Feld. Es bedarf zusätzlich eines guten gesellschaftlichen Einflusses und der Bau eines exklusiven Teehauses ist hilfreich, um den Provinz-Kommissar milde zu stimmen. Neu errichtete Brücken ermöglichen Abkürzungen und Handelsposten in der Ferne sichern die eigene Route entlang die Tea-Horse Road.\nYUNNAN ist ideal für Spieler, die taktische Aufbauspiele mit Interaktion mögen, denn die Verzahnung der Spielmechanismen sorgt dafür, dass laufend alle Spieler am Spielgeschehen beteiligt sind. Die Vielfalt der Handlungsoptionen ermöglicht immer wieder neue Strategien. Nur wer knallhart kalkuliert, gegen den richtigen Gegner zum richtigen Zeitpunkt vorgeht und auf die Aktionen der Mitspieler adäquat und schnell reagiert, wird aus diesem Spiel ohne Glücksfaktor als Gewinner hervorgehen. ",
+  "spieldauerTyp" : "Einwert",
+  "spieldauerMinutenMin" : 90,
+  "spieldauerMinutenMax" : 0,
+  "erscheinugsjahr" : "2013",
+  "spieleranzahlMin" : 2,
+  "spieleranzahlMax" : 5,
+  "altersempfehlung" : 12,
+  "altersempfehlungMax" : 0,
+  "leihpreis" : 3,
+  "kategorie" : {
+    "id" : 14,
+    "name" : "Strategiespiele"
+  },
+  "coverBildId" : null,
+  "attachments" : [ {
+    "trelloId" : "59f49e0144ea7b37a7c5f965",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f49e03d988c0823d941324",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5137,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941323",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 44104,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941322",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 8460,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941321",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 32103,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941320",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 107198,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131f",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 320208,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131e",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 2488028,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f49e0144ea7b37a7c5f965",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f49e03d988c0823d941324",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5137,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941323",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 44104,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941322",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 8460,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941321",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 32103,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941320",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 107198,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131f",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 320208,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131e",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 2488028,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f49e0144ea7b37a7c5f965",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f49e03d988c0823d941324",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5137,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941323",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 44104,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941322",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 8460,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941321",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 32103,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941320",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 107198,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131f",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 320208,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131e",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 2488028,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f49e0144ea7b37a7c5f965",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f49e03d988c0823d941324",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5137,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941323",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 44104,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941322",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 8460,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941321",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 32103,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941320",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 107198,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131f",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 320208,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131e",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 2488028,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f49e0144ea7b37a7c5f965",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f49e03d988c0823d941324",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5137,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941323",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 44104,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941322",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 8460,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941321",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 32103,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941320",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 107198,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131f",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 320208,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131e",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 2488028,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f49e0144ea7b37a7c5f965",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f49e03d988c0823d941324",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5137,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941323",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 44104,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941322",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 8460,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941321",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 32103,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941320",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 107198,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131f",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 320208,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131e",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 2488028,
+      "scaled" : true
+    } ]
+  }, {
+    "trelloId" : "59f49e0144ea7b37a7c5f965",
+    "name" : "photo.jpg",
+    "preview" : [ {
+      "trelloId" : "59f49e03d988c0823d941324",
+      "height" : 50,
+      "width" : 70,
+      "bytes" : 5137,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941323",
+      "height" : 150,
+      "width" : 250,
+      "bytes" : 44104,
+      "scaled" : false
+    }, {
+      "trelloId" : "59f49e03d988c0823d941322",
+      "height" : 200,
+      "width" : 150,
+      "bytes" : 8460,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941321",
+      "height" : 400,
+      "width" : 300,
+      "bytes" : 32103,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d941320",
+      "height" : 800,
+      "width" : 600,
+      "bytes" : 107198,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131f",
+      "height" : 1600,
+      "width" : 1200,
+      "bytes" : 320208,
+      "scaled" : true
+    }, {
+      "trelloId" : "59f49e03d988c0823d94131e",
+      "height" : 3024,
+      "width" : 4032,
+      "bytes" : 2488028,
+      "scaled" : true
+    } ]
+  } ],
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/spiele/28"
+    },
+    "spiel" : {
+      "href" : "http://localhost:8080/spiele/28"
+    }
+  }
+}

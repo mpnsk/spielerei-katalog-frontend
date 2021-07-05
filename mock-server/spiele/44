@@ -1,0 +1,28 @@
+{
+  "id" : 44,
+  "name" : "Bushido",
+  "beschreibung" : "Japan 1565, die Sengoki Zeit geht ihrem Ende entgegen. Der letzte Shogun des Ashikaga Clans ist schwach und unentschlossen. Hilflos sieht er zu wie machthungrige Provinzfürsten das fruchtbare Inselreich ausbluten lassen. Soll Japan nicht in Anarchie und Chaos versinken muss der Kaiser binnen 12 Monaten einen neuen Shogun ernennen. Einen Fürsten mit der Kraft das Reich zu einen. Einen Mann der dem Volk Hoffnung gibt. Einen Anführer der dem Bushido, dem Weg des Kriegers, folgt ... aufrichtig, ehrenhaft, mutig, gütig, aber auch treu, höflich und ehrlich. Aber ist es am Ende dann nicht doch allein der Sieg der zählt? Ist dem ruchlosen Sieg tatsächlich eine ehrenhafte Niederlage vorzuziehen? In wechselnden Rollen als Daimyo, Samurai, Bushi, Sensei oder Hatamoto lenken die Spieler bei „Bushido“ die Geschicke des feudalen Japans und versuchen sich auf dem schmalen Pfad zwischen Macht und Ehre gegen ihre Mitspieler zu behaupten. Der ganz besondere Reiz des Spiels liegt dabei in der komplexen, wechselseitigen Abhängigkeit des Daimyos und seines jeweiligen Samurai. „Bushido, der Weg des Kriegers“ ist kein Eroberungsspiel im herkömmlichen Sinn. Wichtiger als Landgewinn und siegreiche Schlachten sind Loyalität, Tradition und Ehre. Möge im Land der aufgehenden Sonne die Ehre niemals in Vergessenheit geraten... ",
+  "spieldauerTyp" : "MinMax",
+  "spieldauerMinutenMin" : 60,
+  "spieldauerMinutenMax" : 120,
+  "erscheinugsjahr" : "2008",
+  "spieleranzahlMin" : 3,
+  "spieleranzahlMax" : 5,
+  "altersempfehlung" : 12,
+  "altersempfehlungMax" : 0,
+  "leihpreis" : 3,
+  "kategorie" : {
+    "id" : 14,
+    "name" : "Strategiespiele"
+  },
+  "coverBildId" : null,
+  "attachments" : [ ],
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/spiele/44"
+    },
+    "spiel" : {
+      "href" : "http://localhost:8080/spiele/44"
+    }
+  }
+}

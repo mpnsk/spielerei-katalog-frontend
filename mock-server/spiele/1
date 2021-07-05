@@ -1,0 +1,28 @@
+{
+  "id" : 1,
+  "name" : "Wiedereröffnung der Spielerei",
+  "beschreibung" : "**Datum:** 16.09.2018\n**Ort:** Kolpinghaus Burgstraße 3\nWir haben die Spielerei wiedereröffnet und freuen uns, dafür die Räume des Kolpinghaus nutzen zu können.\nAußerdem haben wir dieses Trello-Board gebaut, um euch die Möglichkeit zu geben, zu sehen welche Spiele in der neuen Spielerei verfügbar sind.\nWir geben uns Mühe, diese Liste zu pflegen und nach und nach um Informationen zu ergänzen. Aktuell sind die Spiele in grobe Genres sortiert. Zusätzlich gibt es eine Spalten in der die ausgeliehenen Spiele landen. Zusätzlich haben wir ein Archiv mit eingelagerten Spielen die ihr auf Anfrage ausleihen und spielen könnt.\n\nWir freuen uns euch in der neuen Spielerei willkommen zu heißen.\nEuer Spielerei-Team",
+  "spieldauerTyp" : "Einwert",
+  "spieldauerMinutenMin" : 0,
+  "spieldauerMinutenMax" : 0,
+  "erscheinugsjahr" : null,
+  "spieleranzahlMin" : 0,
+  "spieleranzahlMax" : 0,
+  "altersempfehlung" : 0,
+  "altersempfehlungMax" : 0,
+  "leihpreis" : 0,
+  "kategorie" : {
+    "id" : 13,
+    "name" : "Ankündigungen"
+  },
+  "coverBildId" : null,
+  "attachments" : [ ],
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/spiele/1"
+    },
+    "spiel" : {
+      "href" : "http://localhost:8080/spiele/1"
+    }
+  }
+}
