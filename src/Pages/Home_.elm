@@ -1,6 +1,6 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
-import Css exposing (height, px, width)
+import Css exposing (height, padding, px, row, width)
 import Decode.SpringDataRestSpiel exposing (AttachmentsObjectPreviewObject)
 import Gen.Params.Home_ exposing (Params)
 import Html
@@ -8,12 +8,13 @@ import Html.Styled exposing (a, div, fromUnstyled, img, nav, p, span, text, toUn
 import Html.Styled.Attributes as Attr exposing (attribute, class, css, href, src, style)
 import Http
 import List
-import Masonry
+import Masonry exposing (fromItems)
 import Page
 import Pagination exposing (rangePagination)
 import Request
 import Shared
 import Svg.Styled exposing (path, svg)
+import Svg.Styled.Attributes exposing (spacing)
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 import View exposing (View)
@@ -127,49 +128,88 @@ view model =
                                 )
                                 a.embedded.spiele
 
-                        masonry =
-                            let
-                                config =
-                                    let
-                                        viewItem id ( index, embeddedSpieleObject ) =
-                                            let
-                                                h : Float
-                                                h =
-                                                    List.head embeddedSpieleObject.attachments
-                                                        |> Maybe.map (\att -> att.preview)
-                                                        |> Maybe.andThen List.head
-                                                        |> Maybe.map .height
-                                                        |> (\x ->
-                                                                case x of
-                                                                    Just i ->
-                                                                        i
-
-                                                                    Nothing ->
-                                                                        200
-                                                           )
-                                                        |> toFloat
-
-                                                --|> Maybe.map .height
-                                            in
-                                            toUnstyled <|
-                                                div [ css [ height <| px h ] ]
-                                                    --[ Html.text <| "index" ++ String.fromInt index
-                                                    --, Html.text " "
-                                                    [ text <| String.fromInt index ++ " " ++ embeddedSpieleObject.name
-                                                    ]
-                                    in
-                                    { toView = viewItem
-                                    , columns = 4
-                                    }
-                            in
-                            Masonry.view config <| Tuple.first <| (Masonry.init <| Just "masonry-id") <| List.indexedMap Tuple.pair a.embedded.spiele
+                        --masonry =
+                        --    let
+                        --        config =
+                        --            let
+                        --                viewItem id ( index, embeddedSpieleObject ) =
+                        --                    let
+                        --                        h =
+                        --                            List.head embeddedSpieleObject.attachments
+                        --                                |> Maybe.map (\att -> att.preview)
+                        --                                |> Maybe.andThen List.head
+                        --                                |> Maybe.map .height
+                        --                                |> (\x ->
+                        --                                        case x of
+                        --                                            Just i ->
+                        --                                                i
+                        --
+                        --                                            Nothing ->
+                        --                                                200
+                        --                                   )
+                        --
+                        --                        --|> Maybe.map .height
+                        --                    in
+                        --                    Html.div [ Html.Attributes.style "height" (String.fromInt h ++ "px"), Html.Attributes.style "background-color" "red" ]
+                        --                        --[ Html.text <| "index" ++ String.fromInt index
+                        --                        --, Html.text " "
+                        --                        [ Html.text <| String.fromInt index ++ " " ++ embeddedSpieleObject.name
+                        --                        ]
+                        --            in
+                        --            { toView = viewItem
+                        --            , columns = 4
+                        --            }
+                        --    in
+                        --    Masonry.view config <| Tuple.first <| (Masonry.init <| Just "masonry-id") <| List.indexedMap Tuple.pair a.embedded.spiele
                     in
                     div []
                         [ text "before masonry"
-                        , fromUnstyled masonry
+                        , let
+                            viewMasonry args =
+                                div [] <|
+                                    List.map
+                                        (\masonryColumn ->
+                                            div [] <|
+                                                List.map
+                                                    (\( position, height_ ) ->
+                                                        args.viewItem position height_
+                                                    )
+                                                    (List.reverse masonryColumn)
+                                        )
+                                        (List.reverse <| fromItems args.items args.columns)
+                          in
+                          div [] []
+                        , div []
+                            [ div [ css [ Tw.flex, Tw.flex_row ] ]
+                                [ div [ css [ Tw.flex, Tw.flex_col ] ] [ div [] [ text " 1" ], div [] [ text " 2" ], div [] [ text " 3" ] ]
+                                , div [ css [ Tw.flex, Tw.flex_col ] ] [ div [] [ text " 4" ], div [] [ text " 5" ], div [] [ text " 6" ] ]
+                                , div [ css [ Tw.flex, Tw.flex_col ] ] [ text " 7", text " 8", text " 9" ]
+                                ]
+                            ]
+
+                        --, fromUnstyled masonry
+                        , let
+                            viewItem position height_ =
+                                div
+                                    [ css
+                                        [ Css.height <| px <| toFloat height_
+                                        , Tw.bg_red_500
+                                        ]
+                                    ]
+                                    [ text <|
+                                        "( "
+                                            ++ String.fromInt position
+                                            ++ ", "
+                                            ++ String.fromInt height_
+                                            ++ " )"
+                                    ]
+
+                            masonry =
+                                fromItems [ 10, 30, 30, 30, 10, 20, 20, 20, 10, 30, 30, 30, 10, 40, 40, 40 ] 4
+                          in
+                          div [ css [ Tw.flex, Tw.flex_row, Tw.space_x_1 ] ] <| List.map (\col -> div [ css [ Tw.flex, Tw.flex_col, Tw.space_y_1 ] ] <| List.map (\( position, height ) -> viewItem position height) <| List.reverse <| col) <| List.reverse masonry
                         , text "after masonry"
-                        , div [ style "columns" "3 200px", style "column-gap" "1rem", style "spacing" "20px" ]
-                            divList
+                        , div [ style "columns" "3 200px", style "column-gap" "1rem", style "spacing" "20px" ] divList
                         ]
         ]
     }
