@@ -4,7 +4,7 @@
         "src",
         ".elm-spa/defaults",
         ".elm-spa/generated",
-        "lib/Decode"
+        "lib/spielerei-katalog-frontend-elm-decoder/src"
     ],
     "elm-version": "0.19.1",
     "dependencies": {
