@@ -1,6 +1,7 @@
 module Masonry exposing (fromItems)
 
 import Array
+import Decode.SpringDataRestSpiel exposing (EmbeddedSpieleObject)
 import List.Extra
 
 
@@ -20,8 +21,17 @@ type alias Masonry =
     List (List ( Position, Height ))
 
 
+type alias SpieleMasonry =
+    List (List ( Position, EmbeddedSpieleObject ))
+
+
 columnHeight : List ( Position, Height ) -> Height
 columnHeight column =
+    List.foldl (\( _, height ) total -> height + total) 0 column
+
+
+spieleColumnHeight : List ( Position, EmbeddedSpieleObject ) -> Height
+spieleColumnHeight column =
     List.foldl (\( _, height ) total -> height + total) 0 column
 
 
@@ -68,4 +78,19 @@ addItemToMasonry position height masonry =
 
 fromItems : List Height -> Int -> Masonry
 fromItems items columns =
-    List.Extra.indexedFoldl addItemToMasonry (List.repeat columns []) items
+    let
+        repeat : List (List a)
+        repeat =
+            List.repeat columns []
+    in
+    List.Extra.indexedFoldl addItemToMasonry repeat items
+
+
+fromSpiele : List EmbeddedSpieleObject -> Int -> SpieleMasonry
+fromSpiele items columns =
+    List.Extra.indexedFoldl addItemToSpieleMasonry (List.repeat columns []) items
+
+
+addItemToSpieleMasonry : Position -> EmbeddedSpieleObject -> SpieleMasonry -> SpieleMasonry
+addItemToSpieleMasonry position height masonry =
+    []

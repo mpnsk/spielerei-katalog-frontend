@@ -88,6 +88,37 @@ subscriptions model =
 -- VIEW
 
 
+style1 =
+    [ Tw.bg_blue_200
+    , Tw.m_1
+    , Tw.inline_block
+    , Tw.w_full
+
+    --, height <| px 200
+    ]
+
+
+spielToCard spiel =
+    div [ css <| List.append style1 [] ]
+        [ text spiel.name
+        , case List.head spiel.attachments of
+            Just attachment ->
+                case findFirstInPreviewListWithHeightBigger200 attachment.preview of
+                    Just preview ->
+                        previewToImage attachment preview
+
+                    Nothing ->
+                        text "kein preview"
+
+            Nothing ->
+                text "kein bild"
+        ]
+
+
+previewToImage attachment preview =
+    img [ src ("http://192.168.178.24:8081/" ++ attachment.trelloId ++ "/" ++ String.fromInt preview.width ++ "x" ++ String.fromInt preview.height ++ "/" ++ preview.trelloId ++ "/" ++ attachment.name) ] []
+
+
 view : Model -> View Msg
 view model =
     { title = "titel"
@@ -99,33 +130,9 @@ view model =
 
                 Just a ->
                     let
-                        style1 =
-                            [ Tw.bg_blue_200
-                            , Tw.m_1
-                            , Tw.inline_block
-                            , Tw.w_full
-
-                            --, height <| px 200
-                            ]
-
                         divList =
                             List.map
-                                (\spiel ->
-                                    div [ css <| List.append style1 [] ]
-                                        [ text spiel.name
-                                        , case List.head spiel.attachments of
-                                            Just attachment ->
-                                                case findFirstInPreviewListWithHeightBigger200 attachment.preview of
-                                                    Just preview ->
-                                                        img [ src ("http://192.168.178.24:8081/" ++ attachment.trelloId ++ "/" ++ String.fromInt preview.width ++ "x" ++ String.fromInt preview.height ++ "/" ++ preview.trelloId ++ "/" ++ attachment.name) ] []
-
-                                                    Nothing ->
-                                                        text "kein preview"
-
-                                            Nothing ->
-                                                text "kein bild"
-                                        ]
-                                )
+                                spielToCard
                                 a.embedded.spiele
 
                         --masonry =
@@ -207,7 +214,19 @@ view model =
                             masonry =
                                 fromItems [ 10, 30, 30, 30, 10, 20, 20, 20, 10, 30, 30, 30, 10, 40, 40, 40 ] 4
                           in
-                          div [ css [ Tw.flex, Tw.flex_row, Tw.space_x_1 ] ] <| List.map (\col -> div [ css [ Tw.flex, Tw.flex_col, Tw.space_y_1 ] ] <| List.map (\( position, height ) -> viewItem position height) <| List.reverse <| col) <| List.reverse masonry
+                          case model.spieleCollection of
+                            Just spieleCollection ->
+                                let
+                                    renderColumn col =
+                                        div [ css [ Tw.flex, Tw.flex_col, Tw.space_y_1 ] ] <| List.map (\( position, height ) -> viewItem position height) <| List.reverse <| col
+                                in
+                                div
+                                    [ css [ Tw.flex, Tw.flex_row, Tw.space_x_1 ]
+                                    ]
+                                    (List.map renderColumn <| List.reverse (fromItems spieleCollection.embedded.spiele 2))
+
+                            Nothing ->
+                                text "abc"
                         , text "after masonry"
                         , div [ style "columns" "3 200px", style "column-gap" "1rem", style "spacing" "20px" ] divList
                         ]
